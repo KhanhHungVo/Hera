@@ -1,8 +1,0 @@
-C:\Users\KHANHHUNG\Downloads\Microsoft.SkypeApp_kzf8qxf38zg5c!App\All\Hera\Hera.Common\bin\Debug\netcoreapp3.1\Hera.Common.deps.json
-C:\Users\KHANHHUNG\Downloads\Microsoft.SkypeApp_kzf8qxf38zg5c!App\All\Hera\Hera.Common\bin\Debug\netcoreapp3.1\Hera.Common.dll
-C:\Users\KHANHHUNG\Downloads\Microsoft.SkypeApp_kzf8qxf38zg5c!App\All\Hera\Hera.Common\bin\Debug\netcoreapp3.1\Hera.Common.pdb
-C:\Users\KHANHHUNG\Downloads\Microsoft.SkypeApp_kzf8qxf38zg5c!App\All\Hera\Hera.Common\obj\Debug\netcoreapp3.1\Hera.Common.csprojAssemblyReference.cache
-C:\Users\KHANHHUNG\Downloads\Microsoft.SkypeApp_kzf8qxf38zg5c!App\All\Hera\Hera.Common\obj\Debug\netcoreapp3.1\Hera.Common.AssemblyInfoInputs.cache
-C:\Users\KHANHHUNG\Downloads\Microsoft.SkypeApp_kzf8qxf38zg5c!App\All\Hera\Hera.Common\obj\Debug\netcoreapp3.1\Hera.Common.AssemblyInfo.cs
-C:\Users\KHANHHUNG\Downloads\Microsoft.SkypeApp_kzf8qxf38zg5c!App\All\Hera\Hera.Common\obj\Debug\netcoreapp3.1\Hera.Common.dll
-C:\Users\KHANHHUNG\Downloads\Microsoft.SkypeApp_kzf8qxf38zg5c!App\All\Hera\Hera.Common\obj\Debug\netcoreapp3.1\Hera.Common.pdb
