@@ -47,7 +47,6 @@ namespace Hera.Services.Businesses
                 HashedPassword = userRegister.Password,
             };
             userEntity.DOB = new DateTime(DateTime.UtcNow.Year - userEntity.Age, 8, 4);
-            userEntity.GenerateGuid();
 
             _repository.Add(userEntity);
             await _repository.SaveChangesAsync();

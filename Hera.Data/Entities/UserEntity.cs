@@ -36,14 +36,18 @@ namespace Hera.Data.Entities
         {
             binder.Entity<UserEntity>().ToTable("Users")
                     .HasKey(u => u.Id);
+
+            binder.Entity<UserEntity>()
+                  .Property(u => u.Id)
+                  .HasDefaultValueSql("uuid_generate_v4()");
+
+            binder.Entity<UserEntity>()
+                  .Property(u => u.CreatedDate)
+                  .HasDefaultValueSql("CURRENT_TIMESTAMP");
         }
     }
 
     public partial class UserEntity : EntityBaseTypeId<string>
     {
-        public void GenerateGuid()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
     }
 }
