@@ -1,14 +1,15 @@
+using Hera.Common.Core;
+using Hera.Common.Data;
 using Hera.Common.Extensions;
-using Hera.WebAPI.Helper;
-using Hera.WebAPI.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Hera.Data.Infrastructure;
+using Hera.Services;
+using Hera.Services.Businesses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace Hera.WebAPI
 {
@@ -27,15 +28,19 @@ namespace Hera.WebAPI
             services.AddControllers();
             services.AddHeraSecurityAsSingleton();
             services.AddHeraAuthentication(Configuration);
+            services.AddEntityFrameworkNpgsql().AddDbContext<HeraDbContext>(opt =>
+            {
+                opt.UseNpgsql(Configuration.GetConnectionString(HeraConstants.CONNECTION_STRINGS__POSTGRES_SQL_CONNECTION));
+            });
+
+            services.AddScoped(typeof(IServiceBaseTypeId<,>), typeof(ServiceBaseTypeId<,>));
+            services.AddScoped(typeof(IServiceBase<>), typeof(ServiceBase<>));
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+            services.AddTransient(typeof(IRepositoryBaseTypeId<,>), typeof(RepositoryBaseTypeId<,>));
+            services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+
             services.AddCors();
-
-            // configure strongly typed settings objects
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-           
-            // configure DI for application services
-            services.AddScoped<IUserService, UserService>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

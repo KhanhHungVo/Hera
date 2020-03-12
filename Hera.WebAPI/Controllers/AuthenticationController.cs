@@ -1,5 +1,7 @@
 ﻿using Hera.Common.Core;
 using Hera.Common.WebAPI;
+using Hera.Services.Businesses;
+using Hera.Services.ViewModels.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +10,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Hera.WebAPI.Controllers
 {
@@ -17,27 +20,44 @@ namespace Hera.WebAPI.Controllers
         private readonly ILogger _logger;
         private readonly IHeraSecurity _heraSecurity;
         private readonly JwtTokenDescriptorOptions _tokenDescriptorOptions;
+        private readonly IAuthenticationService _authenticationService;
 
         public AuthenticationController(
             ILogger logger,
             IHeraSecurity heraSecurity,
-            IOptions<JwtTokenDescriptorOptions> tokenDescriptorOptions
+            IOptions<JwtTokenDescriptorOptions> tokenDescriptorOptions,
+            IAuthenticationService authenticationService
         ) : base()
         {
             _logger = logger;
             _heraSecurity = heraSecurity;
             _tokenDescriptorOptions = tokenDescriptorOptions.Value;
+            _authenticationService = authenticationService;
+        }
+
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> Register([FromBody] UserRegisterViewModel userRegister)
+        {
+            byte[] encodedBytes = _heraSecurity.EncryptAes(userRegister.Password);
+            string hashedPassword = Convert.ToBase64String(encodedBytes);
+
+            userRegister.Password = hashedPassword;
+            var newUser = await _authenticationService.Register(userRegister);
+
+            return HeraOk(newUser);
         }
 
         [HttpGet]
         [Route("login")]
-        public IActionResult Login(string username, string password)
+        public async Task<IActionResult> Login(string username, string password)
         {
             byte[] encodedBytes= _heraSecurity.EncryptAes(password);
-            string base64Password = Convert.ToBase64String(encodedBytes);
+            string hashedPassword = Convert.ToBase64String(encodedBytes);
 
-            // password HERABi48!
-            if (!username.Contains("trietnguyen") || !base64Password.Contains("u2fAzCwEy5rnCJBw7dlCSQ=="))
+            var user = await _authenticationService.GetUserLogin(username, hashedPassword);
+
+            if (user == null)
             {
                 return Unauthorized();
             }
@@ -48,7 +68,9 @@ namespace Hera.WebAPI.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, username),
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.MobilePhone, user.Telephone),
+                    new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, "USER")
                 }),
                 Issuer = _tokenDescriptorOptions.Issuer,
@@ -58,7 +80,7 @@ namespace Hera.WebAPI.Controllers
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var accessToken = tokenHandler.WriteToken(token);
-            return Ok(accessToken);
+            return HeraOk(accessToken);
         }
     }
 }
