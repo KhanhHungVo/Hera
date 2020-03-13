@@ -28,6 +28,7 @@ namespace Hera.WebAPI
             services.AddControllers();
             services.AddHeraSecurityAsSingleton();
             services.AddHeraAuthentication(Configuration);
+            services.AddHeraApiDocument();
             services.AddEntityFrameworkNpgsql().AddDbContext<HeraDbContext>(opt =>
             {
                 opt.UseNpgsql(Configuration.GetConnectionString(HeraConstants.CONNECTION_STRINGS__POSTGRES_SQL_CONNECTION));
@@ -41,6 +42,7 @@ namespace Hera.WebAPI
             services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
             services.AddCors();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +58,7 @@ namespace Hera.WebAPI
 
             app.UseRouting();
             app.UseHeraExceptionMiddleware();
+            app.UseHeraCustomApiDocument();
             app.UseAuthentication();
             app.UseAuthorization();
 

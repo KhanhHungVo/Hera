@@ -15,5 +15,15 @@ namespace Hera.Common.Extensions
             appBuilder.UseMiddleware<HeraExceptionMiddleware>();
             return appBuilder;
         }
+
+        public static void UseHeraCustomApiDocument(this IApplicationBuilder appBuilder)
+        {
+            appBuilder.UseSwagger();
+            appBuilder.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hera API v1");
+                c.RoutePrefix = string.Empty;
+            });
+        }
     }
 }
