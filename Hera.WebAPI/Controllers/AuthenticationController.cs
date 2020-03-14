@@ -45,7 +45,7 @@ namespace Hera.WebAPI.Controllers
             userRegister.Password = hashedPassword;
             var newUser = await _authenticationService.Register(userRegister);
 
-            return HeraOk(newUser);
+            return HeraCreated(newUser);
         }
 
         [HttpGet]
@@ -68,10 +68,12 @@ namespace Hera.WebAPI.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Name, user.FirstName + user.LastName),
+                    new Claim(ClaimTypes.Role, "ROLE"),
                     new Claim(ClaimTypes.MobilePhone, user.Telephone),
                     new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Role, "USER")
+                    new Claim(ClaimTypes.Role, "USER"),
+                    new Claim(HeraConstants.CLAIM_TYPE_BAND, user.Band.ToString())
                 }),
                 Issuer = _tokenDescriptorOptions.Issuer,
                 Audience = _tokenDescriptorOptions.Audience,

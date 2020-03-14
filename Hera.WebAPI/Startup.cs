@@ -34,7 +34,7 @@ namespace Hera.WebAPI
             services.AddControllers();
             services.AddHeraSecurityAsSingleton();
             services.AddHeraAuthentication(Configuration);
-            services.AddHeraApiDocument();
+            services.AddHeraSwagger(_env);
             services.AddEntityFrameworkNpgsql().AddDbContext<HeraDbContext>(opt =>
             {
                 opt.UseNpgsql(Configuration.GetConnectionString(HeraConstants.CONNECTION_STRINGS__POSTGRES_SQL_CONNECTION));

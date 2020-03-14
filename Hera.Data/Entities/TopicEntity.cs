@@ -16,9 +16,9 @@ namespace Hera.Data.Entities
 
         public bool RequiredBandRange { get; set; }
 
-        public short BandMinimum { get; set; }
+        public float BandMinimum { get; set; }
 
-        public short BandMaximum { get; set; }
+        public float BandMaximum { get; set; }
 
         public ICollection<LessonEntity> Lessions { get; set; }
 
@@ -26,25 +26,49 @@ namespace Hera.Data.Entities
         public TopicCategoryEntity TopicCategory { get; set; }
     }
 
-    public class TopicEntityBuilder : IHeraCustomModelBinder
+    public class TopicEntityBuilder : HeraBaseCustomModelBinder<TopicEntity, long>, IHeraCustomModelBinder
     {
-        public void Build(ModelBuilder binder)
+        public override void Build(ModelBuilder binder)
         {
+            base.BuildBaseProperties(binder);
+
             binder.Entity<TopicEntity>().ToTable("Topics")
                     .HasKey(t => t.Id);
 
             binder.Entity<TopicEntity>()
-                  .Property(t => t.CreatedDate)
-                  .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                  .Property(t => t.Title)
+                  .HasColumnType("VARCHAR(100)")
+                  .IsRequired();
+
+            binder.Entity<TopicEntity>()
+                  .Property(t => t.BackgroundUrl)
+                  .HasColumnType("VARCHAR(255)")
+                  .IsRequired(false);
+
+            binder.Entity<TopicEntity>()
+                  .Property(t => t.Icon)
+                  .HasColumnType("VARCHAR(50)")
+                  .IsRequired(false);
 
             binder.Entity<TopicEntity>()
                   .Property(t => t.RequiredBandRange)
                   .HasDefaultValue(false);
 
             binder.Entity<TopicEntity>()
+                 .Property(t => t.BandMinimum)
+                 .HasColumnType("NUMERIC(2,1)")
+                 .HasDefaultValue(0.0f);
+
+            binder.Entity<TopicEntity>()
+                 .Property(t => t.BandMaximum)
+                 .HasColumnType("NUMERIC(3,1)")
+                 .HasDefaultValue(0.0f);
+
+            binder.Entity<TopicEntity>()
                   .HasOne(t => t.TopicCategory)
                   .WithMany(tc => tc.Topics)
                   .HasForeignKey(t => t.TopicCategoryId)
+                  .OnDelete(DeleteBehavior.Restrict)
                   .IsRequired();
         }
     }

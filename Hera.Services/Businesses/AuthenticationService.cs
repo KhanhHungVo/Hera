@@ -1,5 +1,6 @@
 ﻿using Hera.Common.Data;
 using Hera.Data.Entities;
+using Hera.Data.Infrastructure;
 using Hera.Services.ViewModels.Authentication;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,7 +13,7 @@ namespace Hera.Services.Businesses
 {
     public class AuthenticationService : ServiceBaseTypeId<UserEntity, string>, IAuthenticationService
     {
-        public AuthenticationService(IRepositoryBaseTypeId<UserEntity, string> repository) : base(repository)
+        public AuthenticationService(IUserRepository repository) : base(repository)
         {
         }
 
