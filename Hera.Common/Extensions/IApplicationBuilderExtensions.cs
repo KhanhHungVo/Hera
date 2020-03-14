@@ -1,6 +1,8 @@
 ﻿using Hera.Common.Middleware;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Serilog;
 using System;
@@ -16,13 +18,19 @@ namespace Hera.Common.Extensions
             return appBuilder;
         }
 
-        public static void UseHeraCustomApiDocument(this IApplicationBuilder appBuilder)
+        public static void UseHeraSwagger(this IApplicationBuilder appBuilder, IWebHostEnvironment env)
         {
+            if (!env.IsDevelopment()) return;
+            
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
             appBuilder.UseSwagger();
-            appBuilder.UseSwaggerUI(c =>
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            appBuilder.UseSwaggerUI(s =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hera API v1");
-                c.RoutePrefix = string.Empty;
+                s.SwaggerEndpoint("/swagger/v1/swagger.json", "Hera API v1");
+                s.DisplayRequestDuration();
             });
         }
     }

@@ -10,5 +10,7 @@ namespace Hera.Common.Core
         public const string APP_SETTING__OAUTH_KEY = "OAuthKey";
         public const string APP_SETTING__JWT_TOKEN_DESCRIPTOR = "JwtTokenDescriptor";
         public const string CONNECTION_STRINGS__POSTGRES_SQL_CONNECTION = "PostgresSqlConnection";
+
+        public const string CLAIM_TYPE_BAND = "Band";
     }
 }

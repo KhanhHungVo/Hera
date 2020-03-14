@@ -16,7 +16,7 @@ namespace Hera.Common.Extensions
             var loggerConfiguration = new LoggerConfiguration()
                                     .Enrich.WithProperty("Version", "1.0.0")
                                     .Enrich.WithThreadId()
-                                    .WriteTo.File(new CompactJsonFormatter(), "log.txt", Serilog.Events.LogEventLevel.Debug, rollingInterval: RollingInterval.Day);
+                                    .WriteTo.File(new CompactJsonFormatter(), @"Logs\log.txt", Serilog.Events.LogEventLevel.Debug, rollingInterval: RollingInterval.Day);
 
             Log.Logger = loggerConfiguration.CreateLogger();
             webBuilder.ConfigureServices((context, services) =>

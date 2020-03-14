@@ -15,7 +15,7 @@ namespace Hera.Data.Entities
 
         public short Age { get; set; }
 
-        public DateTime DOB { get; set; }
+        public DateTime? DOB { get; set; }
 
         public string Username { get; set; }
 
@@ -30,20 +30,63 @@ namespace Hera.Data.Entities
         public string PhoneNumber { get; set; }
     }
 
-    public class UserEntityBuilder : IHeraCustomModelBinder
+    public class UserEntityBuilder : HeraBaseCustomModelBinder<UserEntity, string>, IHeraCustomModelBinder
     {
-        public void Build(ModelBuilder binder)
+        public override void Build(ModelBuilder binder)
         {
+            base.BuildBaseProperties(binder);
+
             binder.Entity<UserEntity>().ToTable("Users")
                     .HasKey(u => u.Id);
-        }
-    }
 
-    public partial class UserEntity : EntityBaseTypeId<string>
-    {
-        public void GenerateGuid()
-        {
-            Id = Guid.NewGuid().ToString();
+            binder.Entity<UserEntity>()
+                  .Property(u => u.Id)
+                  .HasDefaultValueSql("uuid_generate_v4()");
+
+            binder.Entity<UserEntity>()
+                  .Property(u => u.Band)
+                  .HasColumnType("NUMERIC(3,1)")
+                  .IsRequired();
+
+            binder.Entity<UserEntity>()
+                  .Property(u => u.Age)
+                  .HasColumnType("NUMERIC(3)")
+                  .HasDefaultValue(0);
+
+            binder.Entity<UserEntity>()
+                 .Property(u => u.DOB)
+                 .HasColumnType("DATE")
+                 .IsRequired(false);
+
+            binder.Entity<UserEntity>()
+                  .Property(u => u.Username)
+                  .HasColumnType("VARCHAR(255)")
+                  .IsRequired();
+
+            binder.Entity<UserEntity>()
+                  .Property(u => u.FirstName)
+                  .HasColumnType("VARCHAR(100)")
+                  .IsRequired();
+
+            binder.Entity<UserEntity>()
+                  .Property(u => u.LastName)
+                  .HasColumnType("VARCHAR(100)")
+                  .IsRequired();
+
+            binder.Entity<UserEntity>()
+                  .Property(u => u.HashedPassword)
+                  .HasColumnType("VARCHAR")
+                  .IsRequired();
+
+            binder.Entity<UserEntity>()
+                  .Property(u => u.Email)
+                  .HasColumnType("VARCHAR(255)")
+                  .IsRequired();
+
+            binder.Entity<UserEntity>()
+                  .Property(u => u.PhoneNumber)
+                  .HasColumnType("VARCHAR(50)")
+                  .IsRequired(false);
         }
     }
 }
