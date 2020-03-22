@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace Hera.WebAPI.Controllers
 {
     // [Authorize]
+    [Route("api/[controller]")]
     public class TopicCategoriesController : HeraBaseController
     {
         private readonly ITopicCategoriesService _topicCategoriesService;
@@ -18,8 +19,8 @@ namespace Hera.WebAPI.Controllers
             _topicCategoriesService = topicCategoriesService;
         }
 
-        [HttpPost("get-all")]
-        public async Task<IActionResult> GetAll([FromBody] TopicCategoryViewModel model)
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetAll()
         {
             var results = await _topicCategoriesService.GetAll();
 

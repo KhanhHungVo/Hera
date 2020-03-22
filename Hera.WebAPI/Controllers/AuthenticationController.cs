@@ -48,14 +48,19 @@ namespace Hera.WebAPI.Controllers
             return HeraCreated(newUser);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login(string username, string password)
+        public async Task<IActionResult> Login([FromBody] UserLoginViewModel model)
         {
-            byte[] encodedBytes= _heraSecurity.EncryptAes(password);
+            if (!ModelState.IsValid)
+            {
+                return HeraBadRequest();
+            }
+
+            byte[] encodedBytes= _heraSecurity.EncryptAes(model.Password);
             string hashedPassword = Convert.ToBase64String(encodedBytes);
 
-            var user = await _authenticationService.GetUserLogin(username, hashedPassword);
+            var user = await _authenticationService.GetUserLogin(model.Username, hashedPassword);
 
             if (user == null)
             {
