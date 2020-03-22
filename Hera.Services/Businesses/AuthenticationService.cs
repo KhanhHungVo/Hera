@@ -30,6 +30,7 @@ namespace Hera.Services.Businesses
                 Band = userEntity.Band,
                 Telephone = userEntity.PhoneNumber,
                 Email = userEntity.Email,
+                Onboarding = userEntity.Onboarding,
             };
         }
 

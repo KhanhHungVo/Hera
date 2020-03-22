@@ -1,6 +1,8 @@
 ﻿using Hera.Common.Core;
+using Hera.Common.Core.Internal;
 using Hera.Common.WebAPI;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,6 +50,21 @@ namespace Hera.Common.Extensions
                     ClockSkew = TimeSpan.Zero
                 };
             });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(HeraConstants.POLICY_BASED_ROLE, policy =>
+                {
+                    policy.Requirements.Add(new HeraRolesAuthorizationRequirement(HeraConstants.CLAIM_HERA_USER));
+                });
+
+                options.AddPolicy(HeraConstants.POLICY_ADMIN_ROLE, policy =>
+                {
+                    policy.Requirements.Add(new HeraRolesAuthorizationRequirement(HeraConstants.CLAIM_HERA_USER_ADMIN));
+                });
+            });
+
+            services.AddSingleton<IAuthorizationHandler, HeraRolesAuthorizationRequirementHandler>();
 
             return services;
         }

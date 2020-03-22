@@ -28,6 +28,8 @@ namespace Hera.Data.Entities
         public string Email { get; set; }
 
         public string PhoneNumber { get; set; }
+
+        public bool Onboarding { get; set; }
     }
 
     public class UserEntityBuilder : HeraBaseCustomModelBinder<UserEntity, string>, IHeraCustomModelBinder
@@ -87,6 +89,11 @@ namespace Hera.Data.Entities
                   .Property(u => u.PhoneNumber)
                   .HasColumnType("VARCHAR(50)")
                   .IsRequired(false);
+
+            binder.Entity<UserEntity>()
+                  .Property(u => u.Onboarding)
+                  .HasColumnType("BOOLEAN")
+                  .HasDefaultValueSql("TRUE");
         }
     }
 }

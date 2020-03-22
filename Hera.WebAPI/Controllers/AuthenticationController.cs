@@ -5,6 +5,7 @@ using Hera.Services.ViewModels.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -57,7 +58,7 @@ namespace Hera.WebAPI.Controllers
                 return HeraBadRequest();
             }
 
-            byte[] encodedBytes= _heraSecurity.EncryptAes(model.Password);
+            byte[] encodedBytes = _heraSecurity.EncryptAes(model.Password);
             string hashedPassword = Convert.ToBase64String(encodedBytes);
 
             var user = await _authenticationService.GetUserLogin(model.Username, hashedPassword);
@@ -69,24 +70,32 @@ namespace Hera.WebAPI.Controllers
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_tokenDescriptorOptions.OAuthSignatureKey);
-            var tokenDescriptor = new SecurityTokenDescriptor
+
+            var claims = new Claim[]
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.FirstName + user.LastName),
-                    new Claim(ClaimTypes.Role, "ROLE"),
-                    new Claim(ClaimTypes.MobilePhone, user.Telephone),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Role, "USER"),
-                    new Claim(HeraConstants.CLAIM_TYPE_BAND, user.Band.ToString())
-                }),
-                Issuer = _tokenDescriptorOptions.Issuer,
-                Audience = _tokenDescriptorOptions.Audience,
-                Expires = DateTime.UtcNow.AddMinutes(_tokenDescriptorOptions.AccessTokenExpiredTimeInMinute),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                new Claim(ClaimTypes.GivenName, user.FirstName),
+                new Claim(ClaimTypes.Surname, user.LastName),
+                new Claim(ClaimTypes.MobilePhone, user.Telephone),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.UserData, JsonConvert.SerializeObject(new {
+                    // HeraConstants.CLAIM_TYPE_ROLES
+                    Roles = new string[] { HeraConstants.CLAIM_HERA_USER, "Student" }
+                })),
+                new Claim(HeraConstants.CLAIM_TYPE_BAND, user.Band.ToString()),
+                new Claim(HeraConstants.CLAIM_TYPE_ONBOARDING, user.Onboarding.ToString())
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var accessToken = tokenHandler.WriteToken(token);
+
+            int originalClaimsSize = claims.Length;
+            Array.Resize(ref claims, originalClaimsSize + 1);
+
+            var securityToken = new JwtSecurityToken(
+                issuer: _tokenDescriptorOptions.Issuer,
+                audience: _tokenDescriptorOptions.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(_tokenDescriptorOptions.AccessTokenExpiredTimeInMinute),
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            );
+            var accessToken = tokenHandler.WriteToken(securityToken);
             return HeraOk(accessToken);
         }
     }

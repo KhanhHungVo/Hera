@@ -1,4 +1,5 @@
-﻿using Hera.Common.WebAPI;
+﻿using Hera.Common.Core;
+using Hera.Common.WebAPI;
 using Hera.Services.Businesses;
 using Hera.Services.ViewModels.TopicCategories;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Hera.WebAPI.Controllers
 {
-    // [Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     public class TopicCategoriesController : HeraBaseController
     {
@@ -23,6 +24,15 @@ namespace Hera.WebAPI.Controllers
         public async Task<IActionResult> GetAll()
         {
             var results = await _topicCategoriesService.GetAll();
+
+            return HeraOk(results);
+        }
+
+        [HttpGet("user-onboarding")]
+        [Authorize(Policy = HeraConstants.POLICY_BASED_ROLE)]
+        public async Task<IActionResult> GetTopicsForUserOnboarding()
+        {
+            var results = await _topicCategoriesService.GetTopicsForUserOnboarding();
 
             return HeraOk(results);
         }
@@ -54,6 +64,7 @@ namespace Hera.WebAPI.Controllers
         }
 
         [HttpDelete("delete/{title}")]
+        [Authorize(Policy = HeraConstants.POLICY_ADMIN_ROLE)]
         public async Task<IActionResult> Delete(string title)
         {
             if (string.IsNullOrWhiteSpace(title))
