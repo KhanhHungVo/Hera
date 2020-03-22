@@ -7,7 +7,7 @@ namespace Hera.Services.Businesses
 {
     public interface IAuthenticationService : IServiceBaseTypeId<UserEntity, string>
     {
-        Task<UserLoginViewModel> GetUserLogin(string username, string hashedPassword);
+        Task<UserLoginRepsonseService> GetUserLogin(string username, string hashedPassword);
         Task<UserRegisterViewModel> Register(UserRegisterViewModel userRegister);
     }
 }

@@ -17,12 +17,12 @@ namespace Hera.Services.Businesses
         {
         }
 
-        public async Task<UserLoginViewModel> GetUserLogin(string username, string hashedPassword)
+        public async Task<UserLoginRepsonseService> GetUserLogin(string username, string hashedPassword)
         {
             var query = _repository.Query().Where(u => u.Username.Equals(username) && u.HashedPassword.Equals(hashedPassword));
             var userEntity = await query.FirstOrDefaultAsync();
 
-            return userEntity == null ? null : new UserLoginViewModel
+            return userEntity == null ? null : new UserLoginRepsonseService
             {
                 Username = userEntity.Username,
                 FirstName = userEntity.FirstName,
