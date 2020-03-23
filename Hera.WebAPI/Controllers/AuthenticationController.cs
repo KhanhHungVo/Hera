@@ -76,15 +76,15 @@ namespace Hera.WebAPI.Controllers
 
             var claims = new Claim[]
             {
-                new Claim(ClaimTypes.GivenName, user.FirstName),
-                new Claim(ClaimTypes.Surname, user.LastName),
-                new Claim(ClaimTypes.MobilePhone, user.Telephone),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.UserData, JsonConvert.SerializeObject(new UserCredentials {
+                new Claim(HeraConstants.CLAIM_TYPE_USER_DATA, JsonConvert.SerializeObject(new UserCredentials {
                     // HeraConstants.CLAIM_TYPE_ROLES
                     Roles = new string[] { HeraConstants.CLAIM_HERA_USER, "Student" },
                     Band = user.Band,
                     IsOnboarding = user.Onboarding,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    EmailAdress = user.Email,
+                    MobilePhone = user.Telephone
                 }, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
             };
 

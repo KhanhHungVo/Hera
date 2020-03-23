@@ -14,10 +14,8 @@ namespace Hera.Common.Core
         public const string POLICY_BASED_ROLE = "POLICY_BASED_ROLE";
         public const string POLICY_ADMIN_ROLE = "POLICY_ADMIN_ROLE";
 
-        public const string CLAIM_TYPE_ROLES = "Roles";
         public const string CLAIM_HERA_USER = "HERA_USER";
         public const string CLAIM_HERA_USER_ADMIN = "HERA_USER_ADMIN";
-        public const string CLAIM_TYPE_BAND = "band";
-        public const string CLAIM_TYPE_ONBOARDING = "onboarding";
+        public const string CLAIM_TYPE_USER_DATA = "userData";
     }
 }

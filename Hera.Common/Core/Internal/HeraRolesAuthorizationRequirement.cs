@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Hera.Common.Core.Internal
@@ -31,13 +27,13 @@ namespace Hera.Common.Core.Internal
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HeraRolesAuthorizationRequirement requirement)
         {
-            if (!context.User.HasClaim(c => c.Type == ClaimTypes.UserData &&
+            if (!context.User.HasClaim(c => c.Type == HeraConstants.CLAIM_TYPE_USER_DATA &&
                                         c.Issuer == jwtTokenDescriptorOptions.Issuer))
             {
                 return Task.CompletedTask;
             }
 
-            var userDataClaim = context.User.FindFirst(c => c.Type == ClaimTypes.UserData &&
+            var userDataClaim = context.User.FindFirst(c => c.Type == HeraConstants.CLAIM_TYPE_USER_DATA &&
                                                         c.Issuer == jwtTokenDescriptorOptions.Issuer).Value;
             var userCredentials = JsonConvert.DeserializeObject<UserCredentials>(userDataClaim);
 
