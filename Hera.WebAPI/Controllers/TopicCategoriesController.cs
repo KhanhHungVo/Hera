@@ -1,20 +1,23 @@
-﻿using Hera.Common.WebAPI;
+﻿using Hera.Common.Core;
+using Hera.Common.WebAPI;
 using Hera.Services.Businesses;
 using Hera.Services.ViewModels.TopicCategories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Hera.WebAPI.Controllers
 {
-    // [Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     public class TopicCategoriesController : HeraBaseController
     {
         private readonly ITopicCategoriesService _topicCategoriesService;
         public TopicCategoriesController(
+            IHttpContextAccessor httpContextAccessor,
             ITopicCategoriesService topicCategoriesService
-        ) : base()
+        ) : base(httpContextAccessor)
         {
             _topicCategoriesService = topicCategoriesService;
         }
@@ -54,6 +57,7 @@ namespace Hera.WebAPI.Controllers
         }
 
         [HttpDelete("delete/{title}")]
+        [Authorize(Policy = HeraConstants.POLICY_ADMIN_ROLE)]
         public async Task<IActionResult> Delete(string title)
         {
             if (string.IsNullOrWhiteSpace(title))

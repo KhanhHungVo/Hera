@@ -20,5 +20,6 @@ namespace Hera.Services.ViewModels.Authentication
         public string LastName { get; set; }
         public string Telephone { get; set; }
         public string Email { get; set; }
+        public bool Onboarding { get; set; }
     }
 }
