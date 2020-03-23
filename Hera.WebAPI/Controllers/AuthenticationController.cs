@@ -2,10 +2,12 @@
 using Hera.Common.WebAPI;
 using Hera.Services.Businesses;
 using Hera.Services.ViewModels.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -24,11 +26,12 @@ namespace Hera.WebAPI.Controllers
         private readonly IAuthenticationService _authenticationService;
 
         public AuthenticationController(
+            IHttpContextAccessor httpContextAccessor,
             ILogger logger,
             IHeraSecurity heraSecurity,
             IOptions<JwtTokenDescriptorOptions> tokenDescriptorOptions,
             IAuthenticationService authenticationService
-        ) : base()
+        ) : base(httpContextAccessor)
         {
             _logger = logger;
             _heraSecurity = heraSecurity;
@@ -77,12 +80,12 @@ namespace Hera.WebAPI.Controllers
                 new Claim(ClaimTypes.Surname, user.LastName),
                 new Claim(ClaimTypes.MobilePhone, user.Telephone),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.UserData, JsonConvert.SerializeObject(new {
+                new Claim(ClaimTypes.UserData, JsonConvert.SerializeObject(new UserCredentials {
                     // HeraConstants.CLAIM_TYPE_ROLES
-                    Roles = new string[] { HeraConstants.CLAIM_HERA_USER, "Student" }
-                })),
-                new Claim(HeraConstants.CLAIM_TYPE_BAND, user.Band.ToString()),
-                new Claim(HeraConstants.CLAIM_TYPE_ONBOARDING, user.Onboarding.ToString())
+                    Roles = new string[] { HeraConstants.CLAIM_HERA_USER, "Student" },
+                    Band = user.Band,
+                    IsOnboarding = user.Onboarding,
+                }, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
             };
 
             int originalClaimsSize = claims.Length;

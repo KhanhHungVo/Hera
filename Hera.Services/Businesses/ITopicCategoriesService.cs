@@ -11,7 +11,6 @@ namespace Hera.Services.Businesses
     {
         Task CreateTopicCategory(TopicCategoryViewModel model);
         Task<IEnumerable<TopicCategoryViewModel>> GetAll();
-        Task<IEnumerable<TopicCategoryViewModel>> GetTopicsForUserOnboarding();
         Task UpdateTopicCategory(TopicCategoryViewModel model);
         Task DeleteTopicCategory(TopicCategoryViewModel model);
     }

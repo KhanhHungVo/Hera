@@ -11,6 +11,8 @@ namespace Hera.Common.Data
     {
         IQueryable<T> Query();
 
+        IQueryable<T> QueryAsNoTracking();
+
         void Add(T entity);
 
         void AddRange(IEnumerable<T> entities);

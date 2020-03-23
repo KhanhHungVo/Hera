@@ -51,10 +51,5 @@ namespace Hera.Services.Businesses
             data.Title = model.Title;
             await _repository.SaveChangesAsync();
         }
-
-        public async Task<IEnumerable<TopicCategoryViewModel>> GetTopicsForUserOnboarding()
-        {
-            return null;
-        }
     }
 }

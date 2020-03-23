@@ -39,10 +39,9 @@ namespace Hera.Common.Core.Internal
 
             var userDataClaim = context.User.FindFirst(c => c.Type == ClaimTypes.UserData &&
                                                         c.Issuer == jwtTokenDescriptorOptions.Issuer).Value;
-            var userData = JsonConvert.DeserializeObject<JObject>(userDataClaim);
-            var roles = userData.SelectToken(HeraConstants.CLAIM_TYPE_ROLES).ToObject<IEnumerable<string>>();
+            var userCredentials = JsonConvert.DeserializeObject<UserCredentials>(userDataClaim);
 
-            foreach (var role in roles)
+            foreach (var role in userCredentials.Roles)
             {
                 if (requirement.HeraRoles.Any(heraRole => role.Equals(heraRole)))
                 {

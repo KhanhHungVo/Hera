@@ -46,6 +46,16 @@ namespace Hera.Data.Infrastructure
             return DbSet;
         }
 
+        public IQueryable<T> QueryAsNoTracking()
+        {
+            return DbSet.AsNoTracking();
+        }
+
+        public IQueryable<TEntity> QueryAsNoTracking<TEntity, TTypeId>() where TEntity : class, IEntityTypeId<TTypeId>
+        {
+            return Context.Set<TEntity>().AsNoTracking();
+        }
+
         public void SaveChanges()
         {
             Context.SaveChanges();

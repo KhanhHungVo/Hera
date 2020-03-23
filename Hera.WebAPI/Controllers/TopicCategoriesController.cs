@@ -3,6 +3,7 @@ using Hera.Common.WebAPI;
 using Hera.Services.Businesses;
 using Hera.Services.ViewModels.TopicCategories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -14,8 +15,9 @@ namespace Hera.WebAPI.Controllers
     {
         private readonly ITopicCategoriesService _topicCategoriesService;
         public TopicCategoriesController(
+            IHttpContextAccessor httpContextAccessor,
             ITopicCategoriesService topicCategoriesService
-        ) : base()
+        ) : base(httpContextAccessor)
         {
             _topicCategoriesService = topicCategoriesService;
         }
@@ -24,15 +26,6 @@ namespace Hera.WebAPI.Controllers
         public async Task<IActionResult> GetAll()
         {
             var results = await _topicCategoriesService.GetAll();
-
-            return HeraOk(results);
-        }
-
-        [HttpGet("user-onboarding")]
-        [Authorize(Policy = HeraConstants.POLICY_BASED_ROLE)]
-        public async Task<IActionResult> GetTopicsForUserOnboarding()
-        {
-            var results = await _topicCategoriesService.GetTopicsForUserOnboarding();
 
             return HeraOk(results);
         }
