@@ -79,7 +79,7 @@ namespace Hera.Common.WebAPI
 
             var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
             var accessToken = jwtSecurityTokenHandler.ReadJwtToken(authorizationHeader.Replace("Bearer ", string.Empty));
-            var userDataClaim = accessToken.Claims.Where(claim => claim.Type == ClaimTypes.UserData).FirstOrDefault();
+            var userDataClaim = accessToken.Claims.Where(claim => claim.Type == HeraConstants.CLAIM_TYPE_USER_DATA).FirstOrDefault();
             if (userDataClaim == null)
             {
                 return;

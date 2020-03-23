@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace Hera.WebAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class TopicsController : HeraBaseController
     {
         private readonly ITopicsService _topicsService;
