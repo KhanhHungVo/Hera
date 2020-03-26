@@ -14,5 +14,6 @@ namespace Hera.Services.ViewModels.Topics
         public string Title { get; set; }
         public string BackgroundUrl { get; set; }
         public string Icon { get; set; }
+        public bool IsSelected { get; set; }
     }
 }

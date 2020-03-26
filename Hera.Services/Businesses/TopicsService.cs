@@ -94,7 +94,8 @@ namespace Hera.Services.Businesses
                                       {
                                             Title = topic.Title,
                                             BackgroundUrl = topic.BackgroundUrl,
-                                            Icon = topic.Icon
+                                            Icon = topic.Icon,
+                                            IsSelected = false,
                                       }),
             }).ToList();
         }
