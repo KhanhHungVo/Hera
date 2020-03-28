@@ -115,7 +115,7 @@ namespace Hera.Services.Businesses
                                                         .FirstOrDefaultAsync();
 
             var getTopicIdsTask = _repository.QueryAsNoTracking<TopicEntity, long>()
-                                           .Where(topicEntity => topics.Any(t => t.Title == topicEntity.Title))
+                                           .Where(topicEntity => topics.Select(t => t.Title).Contains(topicEntity.Title))
                                            .Select(topicEntity => topicEntity.Id)
                                            .ToArrayAsync();
 

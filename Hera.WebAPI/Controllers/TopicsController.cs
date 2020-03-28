@@ -93,7 +93,7 @@ namespace Hera.WebAPI.Controllers
         [Route("topics-user-onboarding")]
         public async Task<IActionResult> GetTopicsForUserOnboarding()
         {
-            //if (UserCredentials == null || !UserCredentials.IsOnboarding) return HeraNoContent();
+            if (UserCredentials == null || !UserCredentials.IsOnboarding) return HeraNoContent();
 
             var data = await _topicsService.GetTopicsForUserOnboarding();
             return HeraOk(data);
