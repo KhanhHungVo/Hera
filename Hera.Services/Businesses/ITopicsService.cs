@@ -1,4 +1,5 @@
-﻿using Hera.Data.Entities;
+﻿using Hera.Common.Core;
+using Hera.Data.Entities;
 using Hera.Services.ViewModels.Topics;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,6 @@ namespace Hera.Services.Businesses
         Task<IEnumerable<TopicCategoriesUserOnboardingViewModel>> GetTopicsForUserOnboarding();
         Task UpdateTopic(TopicViewModel model);
         Task DeleteTopic(TopicViewModel model);
+        Task SaveTopicsThatUserInterests(UserCredentials userCredentials, IEnumerable<TopicUserOnboardingViewModel> topics);
     }
 }

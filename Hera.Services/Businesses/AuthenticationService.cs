@@ -44,7 +44,7 @@ namespace Hera.Services.Businesses
                 LastName = userRegister.LastName,
                 Age = userRegister.Age,
                 Band = userRegister.Band,
-                Email = userRegister.Email,
+                Email = userRegister.Username,
                 PhoneNumber = userRegister.Telephone,
                 HashedPassword = userRegister.Password,
             };

@@ -2,6 +2,7 @@
 using Hera.Data.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 
 namespace Hera.Data.Entities
 {
@@ -30,6 +31,8 @@ namespace Hera.Data.Entities
         public string PhoneNumber { get; set; }
 
         public bool Onboarding { get; set; }
+
+        public ICollection<TopicsUserInterestEntity> TopicsUserInterest { get; set; }
     }
 
     public class UserEntityBuilder : HeraBaseCustomModelBinder<UserEntity, string>, IHeraCustomModelBinder

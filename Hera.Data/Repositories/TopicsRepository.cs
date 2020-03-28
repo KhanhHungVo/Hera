@@ -65,5 +65,10 @@ namespace Hera.Data.Repositories
         {
             return await QueryAsNoTracking<TopicCategoryEntity, long>().Include(tc => tc.Topics).ToListAsync();
         }
+
+        public void SaveTopicsThatUserInterests(IEnumerable<TopicsUserInterestEntity> topicsUserInterests)
+        {
+            Context.Set<TopicsUserInterestEntity>().AddRange(topicsUserInterests);
+        }
     }
 }

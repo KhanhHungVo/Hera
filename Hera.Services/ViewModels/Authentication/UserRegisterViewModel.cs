@@ -11,7 +11,6 @@ namespace Hera.Services.ViewModels.Authentication
         public string ConfirmedPassword { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Email { get; set; }
         public string Telephone { get; set; }
         public float Band { get; set; }
         public short Age { get; set; }
