@@ -13,6 +13,8 @@ namespace Hera.Common.Data
 
         IQueryable<T> QueryAsNoTracking();
 
+        IQueryable<TEntity> QueryAsNoTracking<TEntity, TTypeId>() where TEntity : class, IEntityTypeId<TTypeId>;
+
         void Add(T entity);
 
         void AddRange(IEnumerable<T> entities);

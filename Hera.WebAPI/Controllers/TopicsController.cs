@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Hera.WebAPI.Controllers
@@ -91,10 +93,28 @@ namespace Hera.WebAPI.Controllers
         [Route("topics-user-onboarding")]
         public async Task<IActionResult> GetTopicsForUserOnboarding()
         {
-            if (UserCredentials == null || !UserCredentials.IsOnboarding) return HeraNoContent();
+            //if (UserCredentials == null || !UserCredentials.IsOnboarding) return HeraNoContent();
 
             var data = await _topicsService.GetTopicsForUserOnboarding();
             return HeraOk(data);
         }
+
+        [HttpPost]
+        [Route("save-topics-user-interest")]
+        public async Task<IActionResult> SaveTopicsThatUserInterest([FromBody] IEnumerable<TopicUserOnboardingViewModel> topics)
+        {
+            if (topics == null || !topics.Any())
+            {
+                return HeraBadRequest();
+            }
+
+            if (!topics.Any(t => t.IsSelected == true))
+            {
+                return HeraBadRequest("At least one topic you have to interest");
+            }
+
+            await _topicsService.SaveTopicsThatUserInterests(UserCredentials, topics);
+            return HeraOk();
+        } 
     }
 }

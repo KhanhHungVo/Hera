@@ -25,6 +25,8 @@ namespace Hera.Data.Entities
         public long TopicCategoryId { get; set; }
         public TopicCategoryEntity TopicCategory { get; set; }
 
+        public ICollection<TopicsUserInterestEntity> TopicsUserInterest { get; set; }
+
         public TopicEntity(long id)
         {
             Id = id;

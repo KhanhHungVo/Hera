@@ -11,5 +11,6 @@ namespace Hera.Data.Infrastructure
         Task CreateTopic(TopicEntity topicEntity);
         Task<TopicEntity> UpdateTopic(TopicEntity topicEntity);
         Task<IEnumerable<TopicCategoryEntity>> GetTopicsForUserOnboarding();
+        void SaveTopicsThatUserInterests(IEnumerable<TopicsUserInterestEntity> topicsUserInterests);
     }
 }

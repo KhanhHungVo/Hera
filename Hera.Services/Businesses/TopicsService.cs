@@ -1,8 +1,11 @@
-﻿using Hera.Data.Entities;
+﻿using Hera.Common.Core;
+using Hera.Data.Entities;
 using Hera.Data.Infrastructure;
 using Hera.Services.ViewModels.Topics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +16,13 @@ namespace Hera.Services.Businesses
 {
     public class TopicsService : ServiceBase<TopicEntity>, ITopicsService
     {
-        public TopicsService(ITopicsRepository repository) : base(repository)
-        {
+        private readonly ILogger _logger;
+        private readonly ITopicsRepository _topicRepository;
 
+        public TopicsService(ITopicsRepository repository, ILogger logger) : base(repository)
+        {
+            _logger = logger;
+            _topicRepository = repository;
         }
         public async Task CreateTopic(TopicViewModel model)
         {
@@ -57,7 +64,7 @@ namespace Hera.Services.Businesses
         public async Task UpdateTopic(TopicViewModel model)
         {
             var topicEntity = ToTopicEntity(model);
-            topicEntity = await (_repository as ITopicsRepository).UpdateTopic(topicEntity);
+            topicEntity = await _topicRepository.UpdateTopic(topicEntity);
             if (topicEntity.Id <= 0 || topicEntity.TopicCategory.Id <= 0)
             {
                 return;
@@ -85,7 +92,7 @@ namespace Hera.Services.Businesses
 
         public async Task<IEnumerable<TopicCategoriesUserOnboardingViewModel>> GetTopicsForUserOnboarding()
         {
-            var data = await (_repository as ITopicsRepository).GetTopicsForUserOnboarding();
+            var data = await _topicRepository.GetTopicsForUserOnboarding();
             return data.Select(topicCategory => new TopicCategoriesUserOnboardingViewModel
             {
                 CategoryTitle = topicCategory.Title,
@@ -98,6 +105,55 @@ namespace Hera.Services.Businesses
                                             IsSelected = false,
                                       }),
             }).ToList();
+        }
+
+        public async Task SaveTopicsThatUserInterests(UserCredentials userCredentials, IEnumerable<TopicUserOnboardingViewModel> topics)
+        {
+            var getUserIdTask = _repository.QueryAsNoTracking<UserEntity, string>()
+                                                        .Where(u => u.Username.Contains(userCredentials.EmailAdress))
+                                                        .Select(u => u.Id)
+                                                        .FirstOrDefaultAsync();
+
+            var getTopicIdsTask = _repository.QueryAsNoTracking<TopicEntity, long>()
+                                           .Where(topicEntity => topics.Any(t => t.Title == topicEntity.Title))
+                                           .Select(topicEntity => topicEntity.Id)
+                                           .ToArrayAsync();
+
+            await Task.WhenAll(getUserIdTask, getTopicIdsTask);
+
+            var topicIds = await getTopicIdsTask;
+            var userId = await getUserIdTask;
+
+            // there are no topics with these title and user id exist in database
+            if (topicIds == null || !topicIds.Any() || userId == null)
+            {
+                _logger.Warning($"There are no topics with these title or user id {userId} exist in database", JsonConvert.SerializeObject(topics));
+                return;
+            }
+
+            var topicsUserInterest = await _repository.QueryAsNoTracking<TopicsUserInterestEntity, long>()
+                                                      .Where(tui => tui.UserId.Contains(userId) && topicIds.Any(topicId => topicId == tui.TopicId))
+                                                      .Select(tui => tui)
+                                                      .ToArrayAsync();
+
+            // this user is first onboarding
+            if (topicsUserInterest == null || !topicsUserInterest.Any())
+            {
+                var newTopicsUserInterest = topicIds.Select(topicId => new TopicsUserInterestEntity
+                {
+                    TopicId = topicId,
+                    UserId = userId,
+                });
+
+                _topicRepository.SaveTopicsThatUserInterests(newTopicsUserInterest);
+
+                await _topicRepository.SaveChangesAsync();
+
+                return;
+            }
+
+            // TO DO
+            // User change topics interest
         }
     }
 }
