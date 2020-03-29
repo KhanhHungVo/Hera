@@ -109,9 +109,12 @@ namespace Hera.Services.Businesses
 
         public async Task SaveTopicsThatUserInterests(UserCredentials userCredentials, IEnumerable<TopicUserOnboardingViewModel> topics)
         {
-            var getUserIdTask = _repository.QueryAsNoTracking<UserEntity, string>()
+            var getUserTask = _repository.QueryAsNoTracking<UserEntity, string>()
                                                         .Where(u => u.Username.Contains(userCredentials.EmailAdress))
-                                                        .Select(u => u.Id)
+                                                        .Select(u => new UserEntity(u.Id)
+                                                        {
+                                                            Onboarding = u.Onboarding
+                                                        })
                                                         .FirstOrDefaultAsync();
 
             var getTopicIdsTask = _repository.QueryAsNoTracking<TopicEntity, long>()
@@ -119,20 +122,20 @@ namespace Hera.Services.Businesses
                                            .Select(topicEntity => topicEntity.Id)
                                            .ToArrayAsync();
 
-            await Task.WhenAll(getUserIdTask, getTopicIdsTask);
+            await Task.WhenAll(getUserTask, getTopicIdsTask);
 
             var topicIds = await getTopicIdsTask;
-            var userId = await getUserIdTask;
+            var userData = await getUserTask;
 
             // there are no topics with these title and user id exist in database
-            if (topicIds == null || !topicIds.Any() || userId == null)
+            if (topicIds == null || !topicIds.Any() || userData == null)
             {
-                _logger.Warning($"There are no topics with these title or user id {userId} exist in database", JsonConvert.SerializeObject(topics));
+                _logger.Warning($"There are no topics with these title or user id {userData} exist in database", JsonConvert.SerializeObject(topics));
                 return;
             }
 
             var topicsUserInterest = await _repository.QueryAsNoTracking<TopicsUserInterestEntity, long>()
-                                                      .Where(tui => tui.UserId.Contains(userId) && topicIds.Any(topicId => topicId == tui.TopicId))
+                                                      .Where(tui => tui.UserId.Contains(userData.Id) && topicIds.Any(topicId => topicId == tui.TopicId))
                                                       .Select(tui => tui)
                                                       .ToArrayAsync();
 
@@ -142,10 +145,14 @@ namespace Hera.Services.Businesses
                 var newTopicsUserInterest = topicIds.Select(topicId => new TopicsUserInterestEntity
                 {
                     TopicId = topicId,
-                    UserId = userId,
+                    UserId = userData.Id,
                 });
 
                 _topicRepository.SaveTopicsThatUserInterests(newTopicsUserInterest);
+
+                userData.Onboarding = false;
+
+                _repository.SetEntityPropertiesHasModified<UserEntity, string>(userData, new string[] { nameof(UserEntity.Onboarding) });
 
                 await _topicRepository.SaveChangesAsync();
 

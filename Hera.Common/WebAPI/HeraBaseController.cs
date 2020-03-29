@@ -78,14 +78,23 @@ namespace Hera.Common.WebAPI
             }
 
             var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
-            var accessToken = jwtSecurityTokenHandler.ReadJwtToken(authorizationHeader.Replace("Bearer ", string.Empty));
-            var userDataClaim = accessToken.Claims.Where(claim => claim.Type == HeraConstants.CLAIM_TYPE_USER_DATA).FirstOrDefault();
-            if (userDataClaim == null)
-            {
-                return;
-            }
 
-            UserCredentials = JsonConvert.DeserializeObject<UserCredentials>(userDataClaim.Value);
+            // maybe token is fake, So we put this code into try catch block
+            try
+            {
+                var accessToken = jwtSecurityTokenHandler.ReadJwtToken(authorizationHeader.Replace("Bearer ", string.Empty));
+                var userDataClaim = accessToken.Claims.Where(claim => claim.Type == HeraConstants.CLAIM_TYPE_USER_DATA).FirstOrDefault();
+                if (userDataClaim == null)
+                {
+                    return;
+                }
+
+                UserCredentials = JsonConvert.DeserializeObject<UserCredentials>(userDataClaim.Value);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
