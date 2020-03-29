@@ -12,6 +12,11 @@ namespace Hera.Data.Entities
         {
         }
 
+        public UserEntity(string userId)
+        {
+            Id = userId;
+        }
+
         public float Band { get; set; }
 
         public short Age { get; set; }

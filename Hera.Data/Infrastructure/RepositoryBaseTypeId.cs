@@ -46,6 +46,11 @@ namespace Hera.Data.Infrastructure
             return DbSet;
         }
 
+        public IQueryable<TEntity> Query<TEntity, TTypeId>() where TEntity : class, IEntityTypeId<TTypeId>
+        {
+            return Context.Set<TEntity>();
+        }
+
         public IQueryable<T> QueryAsNoTracking()
         {
             return DbSet.AsNoTracking();
@@ -54,6 +59,21 @@ namespace Hera.Data.Infrastructure
         public IQueryable<TEntity> QueryAsNoTracking<TEntity, TTypeId>() where TEntity : class, IEntityTypeId<TTypeId>
         {
             return Context.Set<TEntity>().AsNoTracking();
+        }
+
+        public void SetEntityState<TEntity, TTypeId>(TEntity entity, EntityState state) where TEntity : class, IEntityTypeId<TTypeId>
+        {            
+            Context.Entry(entity).State = state;
+        }
+
+        public void SetEntityPropertiesHasModified<TEntity, TTypeId>(TEntity entity, IEnumerable<string> modifiedPropertiesName) where TEntity : class, IEntityTypeId<TTypeId>
+        {
+            var entryEntity = Context.Entry(entity);
+
+            foreach (var propertyName in modifiedPropertiesName)
+            {
+                entryEntity.Property(propertyName).IsModified = true;
+            }
         }
 
         public void SaveChanges()

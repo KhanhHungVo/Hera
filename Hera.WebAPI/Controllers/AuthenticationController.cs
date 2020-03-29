@@ -68,7 +68,7 @@ namespace Hera.WebAPI.Controllers
 
             if (user == null)
             {
-                return Unauthorized();
+                return HeraNoContent();
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
