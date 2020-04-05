@@ -15,7 +15,8 @@ namespace Hera.Data.Infrastructure
             binder.Entity<T>()
                   .Property(e => e.CreatedDate)
                   .HasColumnType("TIMESTAMP WITH TIME ZONE")
-                  .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                  .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                  .IsRequired();
 
             binder.Entity<T>()
                   .Property(e => e.IsActive)
@@ -30,7 +31,6 @@ namespace Hera.Data.Infrastructure
             binder.Entity<T>()
                   .Property(e => e.UpdatedDate)
                   .HasColumnType("TIMESTAMP WITH TIME ZONE")
-                  .HasDefaultValueSql("CURRENT_TIMESTAMP")
                   .IsRequired(false);
         }
     }

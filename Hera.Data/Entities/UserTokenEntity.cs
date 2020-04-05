@@ -44,7 +44,27 @@ namespace Hera.Data.Entities
                   .IsRequired();
 
             binder.Entity<UserTokenEntity>()
+                  .Property(ut => ut.AccessTokenIssuedTime)
+                  .HasColumnType("TIMESTAMP WITH TIME ZONE")
+                  .IsRequired();
+
+            binder.Entity<UserTokenEntity>()
+                  .Property(ut => ut.AccessTokenExpiredTime)
+                  .HasColumnType("TIMESTAMP WITH TIME ZONE")
+                  .IsRequired();
+
+            binder.Entity<UserTokenEntity>()
                   .Property(ut => ut.RefreshToken)
+                  .IsRequired();
+
+            binder.Entity<UserTokenEntity>()
+                  .Property(ut => ut.RefreshTokenIssuedTime)
+                  .HasColumnType("TIMESTAMP WITH TIME ZONE")
+                  .IsRequired();
+
+            binder.Entity<UserTokenEntity>()
+                  .Property(ut => ut.RefreshTokenExpiredTime)
+                  .HasColumnType("TIMESTAMP WITH TIME ZONE")
                   .IsRequired();
 
             binder.Entity<UserTokenEntity>()
