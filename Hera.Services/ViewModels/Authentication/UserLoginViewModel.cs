@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Hera.Services.ViewModels.Authentication
 {
@@ -14,6 +15,9 @@ namespace Hera.Services.ViewModels.Authentication
     }
     public class UserLoginRepsonseService
     {
+        [JsonIgnore]
+        public string UserId { get; set; }
+
         public string Username { get; set; }
         public float Band { get; set; }
         public string FirstName { get; set; }

@@ -39,6 +39,11 @@ namespace Hera.WebAPI
             services.AddEntityFrameworkNpgsql().AddDbContext<HeraDbContext>(opt =>
             {
                 opt.UseNpgsql(Configuration.GetConnectionString(HeraConstants.CONNECTION_STRINGS__POSTGRES_SQL_CONNECTION));
+
+                if (_env.IsDevelopment())
+                {
+                    opt.EnableSensitiveDataLogging();
+                }
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -74,6 +79,11 @@ namespace Hera.WebAPI
             app.UseHeraSwagger(env);
             app.UseAuthentication();
             app.UseAuthorization();
+            app.Use(async (context, next) =>
+            {
+                context.Request.EnableBuffering();
+                await next.Invoke();
+            });
 
             app.UseEndpoints(endpoints =>
             {

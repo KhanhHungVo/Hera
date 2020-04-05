@@ -64,6 +64,19 @@ namespace Hera.Common.WebAPI
             return BadRequest(messages);
         }
 
+        protected void SetUserCredentialsFromAccessToken(string accessToken)
+        {
+            var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = jwtSecurityTokenHandler.ReadJwtToken(accessToken);
+            var userDataClaim = jwtSecurityToken.Claims.Where(claim => claim.Type == HeraConstants.CLAIM_TYPE_USER_DATA).FirstOrDefault();
+            if (userDataClaim == null)
+            {
+                return;
+            }
+
+            UserCredentials = JsonConvert.DeserializeObject<UserCredentials>(userDataClaim.Value);
+        }
+
         private void SetUserCredentials(IHttpContextAccessor httpContextAccessor)
         {
             var authorizationHeader = httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
@@ -77,19 +90,10 @@ namespace Hera.Common.WebAPI
                 return;
             }
 
-            var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
-
             // maybe token is fake, So we put this code into try catch block
             try
             {
-                var accessToken = jwtSecurityTokenHandler.ReadJwtToken(authorizationHeader.Replace("Bearer ", string.Empty));
-                var userDataClaim = accessToken.Claims.Where(claim => claim.Type == HeraConstants.CLAIM_TYPE_USER_DATA).FirstOrDefault();
-                if (userDataClaim == null)
-                {
-                    return;
-                }
-
-                UserCredentials = JsonConvert.DeserializeObject<UserCredentials>(userDataClaim.Value);
+                SetUserCredentialsFromAccessToken(authorizationHeader.Replace("Bearer ", string.Empty));
             }
             catch (Exception)
             {
