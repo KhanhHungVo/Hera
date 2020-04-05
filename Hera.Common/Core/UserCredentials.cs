@@ -11,7 +11,7 @@ namespace Hera.Common.Core
         public bool IsOnboarding { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string EmailAdress { get; set; }
+        public string EmailAddress { get; set; }
         public string MobilePhone { get; set; }
     }
 }

@@ -8,6 +8,10 @@ namespace Hera.Services.Businesses
     public interface IAuthenticationService : IServiceBaseTypeId<UserEntity, string>
     {
         Task<UserLoginRepsonseService> GetUserLogin(string username, string hashedPassword);
+        Task<JwtTokenViewModel> SignIn(string userName, string hashedPassword);
         Task<UserRegisterViewModel> Register(UserRegisterViewModel userRegister);
+        JwtSecurityUserTokenViewModel GenerateToken(UserLoginRepsonseService userLogin);
+        Task<JwtTokenViewModel> AcquireNewToken(UserCredentials userCredentials, JwtTokenViewModel jwtToken);
+        Task DeactivateOldUserToken(string userId);
     }
 }

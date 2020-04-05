@@ -37,6 +37,8 @@ namespace Hera.Data.Entities
 
         public bool Onboarding { get; set; }
 
+        public ICollection<UserTokenEntity> UserTokens { get; set; }
+
         public ICollection<TopicsUserInterestEntity> TopicsUserInterest { get; set; }
     }
 

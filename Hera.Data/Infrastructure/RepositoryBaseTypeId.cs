@@ -26,6 +26,11 @@ namespace Hera.Data.Infrastructure
             DbSet.Add(entity);
         }
 
+        public void Add<TEntity, TTypeId>(TEntity entity) where TEntity : class, IEntityTypeId<TTypeId>
+        {
+            Context.Set<TEntity>().Add(entity);
+        }
+
         public void AddRange(IEnumerable<T> entities)
         {
             DbSet.AddRange(entities);
