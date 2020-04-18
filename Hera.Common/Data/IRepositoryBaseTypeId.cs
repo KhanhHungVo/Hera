@@ -18,6 +18,8 @@ namespace Hera.Common.Data
 
         void Add(T entity);
 
+        void Add<TEntity, TTypeId>(TEntity entity) where TEntity : class, IEntityTypeId<TTypeId>;
+
         void AddRange(IEnumerable<T> entities);
 
         IDbContextTransaction BeginTransaction();

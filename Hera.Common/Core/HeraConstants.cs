@@ -17,5 +17,6 @@ namespace Hera.Common.Core
         public const string CLAIM_HERA_USER = "HERA_USER";
         public const string CLAIM_HERA_USER_ADMIN = "HERA_USER_ADMIN";
         public const string CLAIM_TYPE_USER_DATA = "userData";
+        public const string CLAIM_TYPE_IDENTIFIED_R = "ir";
     }
 }

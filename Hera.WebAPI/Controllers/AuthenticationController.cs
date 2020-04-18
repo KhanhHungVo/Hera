@@ -5,14 +5,8 @@ using Hera.Services.ViewModels.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Serilog;
 using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Hera.WebAPI.Controllers
@@ -64,42 +58,33 @@ namespace Hera.WebAPI.Controllers
             byte[] encodedBytes = _heraSecurity.EncryptAes(model.Password);
             string hashedPassword = Convert.ToBase64String(encodedBytes);
 
-            var user = await _authenticationService.GetUserLogin(model.Username, hashedPassword);
+            var tokenResult = await _authenticationService.SignIn(model.Username, hashedPassword);
+            if (tokenResult == null)
+            {
+                return HeraNoContent();
+            }
+            return HeraOk(tokenResult);
+        }
 
-            if (user == null)
+        [HttpPost]
+        [Route("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] JwtTokenViewModel jwtToken)
+        {
+            if (!ModelState.IsValid)
+            {
+                return HeraBadRequest();
+            }
+
+            SetUserCredentialsFromAccessToken(jwtToken.AccessToken);
+
+            var newJwtToken = await _authenticationService.AcquireNewToken(UserCredentials, jwtToken);
+
+            if (newJwtToken == null)
             {
                 return HeraNoContent();
             }
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_tokenDescriptorOptions.OAuthSignatureKey);
-
-            var claims = new Claim[]
-            {
-                new Claim(HeraConstants.CLAIM_TYPE_USER_DATA, JsonConvert.SerializeObject(new UserCredentials {
-                    // HeraConstants.CLAIM_TYPE_ROLES
-                    Roles = new string[] { HeraConstants.CLAIM_HERA_USER, "Student" },
-                    Band = user.Band,
-                    IsOnboarding = user.Onboarding,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    EmailAdress = user.Email,
-                    MobilePhone = user.Telephone
-                }, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
-            };
-
-            int originalClaimsSize = claims.Length;
-            Array.Resize(ref claims, originalClaimsSize + 1);
-
-            var securityToken = new JwtSecurityToken(
-                issuer: _tokenDescriptorOptions.Issuer,
-                audience: _tokenDescriptorOptions.Audience,
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_tokenDescriptorOptions.AccessTokenExpiredTimeInMinute),
-                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            );
-            var accessToken = tokenHandler.WriteToken(securityToken);
-            return HeraOk(accessToken);
+            return HeraOk(newJwtToken);
         }
     }
 }

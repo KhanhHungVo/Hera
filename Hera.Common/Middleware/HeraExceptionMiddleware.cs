@@ -29,9 +29,10 @@ namespace Hera.Common.Middleware
             }
             catch (Exception ex)
             {
-                string body = "Empty";
-                if (context.Request.Body != null)
+                string body = "Can't read || can't seek body or maybe null";
+                if (context.Request.Body != null && context.Request.Body.CanRead && context.Request.Body.CanSeek)
                 {
+                    context.Request.Body.Seek(0, SeekOrigin.Begin);
                     using (StreamReader sr = new StreamReader(context.Request.Body))
                     {
                         body = await sr.ReadToEndAsync();

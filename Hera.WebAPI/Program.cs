@@ -1,6 +1,7 @@
 using Hera.Common.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using System.IO;
 
 namespace Hera.WebAPI
 {
@@ -13,10 +14,12 @@ namespace Hera.WebAPI
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>()
-                               .UseHeraSerilog();
+                    webBuilder.UseIISIntegration()
+                              .UseStartup<Startup>()
+                              .UseHeraSerilog();
                 });
     }
 }

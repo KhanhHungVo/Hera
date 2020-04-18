@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Hera.Common.Extensions
 {
@@ -34,7 +35,7 @@ namespace Hera.Common.Extensions
             {
                 authenticationOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 authenticationOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(jwtBearerOptions =>
+            }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, jwtBearerOptions =>
             {
                 jwtBearerOptions.SaveToken = true;
                 jwtBearerOptions.ClaimsIssuer = jwtTokenDescriptorOptions.Issuer;
@@ -48,6 +49,18 @@ namespace Hera.Common.Extensions
                     ValidAudience = jwtTokenDescriptorOptions.Audience,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
+                };
+
+                jwtBearerOptions.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                        {
+                            context.Response.Headers.Add("Token-Expired", "true");
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
 
