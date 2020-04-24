@@ -46,6 +46,46 @@ namespace Hera.WebAPI.Controllers
             return HeraCreated(newUser);
         }
 
+        [HttpGet]
+        [Route("validate-email")]
+        public async Task<IActionResult> ValidateEmail(string email)
+        {
+            if (String.IsNullOrWhiteSpace(email))
+            {
+                return HeraBadRequest(new ValidatedRegisterResult
+                {
+                    IsValid = false,
+                    Message = "Email is empty",
+                });
+            }
+
+            var result = await _authenticationService.ValidateEmail(email);
+            if (!result.IsValid)
+            {
+                return HeraBadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("validate-telephone")]
+        public async Task<IActionResult> ValidateTelephone(string telephone)
+        {
+            if (String.IsNullOrWhiteSpace(telephone))
+            {
+                return HeraBadRequest("Telephone is empty");
+            }
+
+            var result = await _authenticationService.ValidatePhoneNumber(telephone);
+            if (!result.IsValid)
+            {
+                return HeraBadRequest(result.Message);
+            }
+
+            return Ok();
+        }
+
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginViewModel model)

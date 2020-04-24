@@ -14,6 +14,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Hera.Services.Businesses
@@ -132,14 +133,14 @@ namespace Hera.Services.Businesses
                 throw new SecurityTokenException("Invalid token");
             }
 
-            if (DateTime.UtcNow > userToken.RefreshTokenExpiredTime)
-            {
-                throw new SecurityTokenException("This refresh token was expired");
-            }
+            //if (DateTime.Now > userToken.RefreshTokenExpiredTime)
+            //{
+            //    throw new SecurityTokenException("This refresh token was expired");
+            //}
 
             // userToken.RefreshTokenExpiredTime has more 5 minutes to live after accessToken was expired
             // we check accessToken has expired time offset before 5 minutes. In during time, we allow user to acquire new access token
-            if ((DateTime.UtcNow - userToken.AccessTokenExpiredTime).Minutes < -5)
+            if ((DateTime.Now - userToken.AccessTokenExpiredTime).Minutes < -5)
             {
                 throw new SecurityTokenException("You can use this access token until it's expired, bro");
             }
@@ -256,6 +257,55 @@ namespace Hera.Services.Businesses
             {
                 throw;
             }
+        }
+
+        public async Task<ValidatedRegisterResult> ValidateEmail(string email)
+        {
+            var regex = new Regex(@"^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$");
+
+            if (!regex.IsMatch(email))
+            {
+                return await Task.FromResult(new ValidatedRegisterResult
+                {
+                    IsValid = false,
+                    Message = "Email is not valid format"
+                });
+            }
+
+            var user = await _userRepository.QueryAsNoTracking().Where(u => u.Email == email).Select(u => u.Email).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return await Task.FromResult(new ValidatedRegisterResult
+                {
+                    IsValid = true,
+                    Message = ""
+                });
+            }
+
+            return await Task.FromResult(new ValidatedRegisterResult
+            {
+                IsValid = false,
+                Message = "This email was already existed"
+            });
+        }
+
+        public async Task<ValidatedRegisterResult> ValidatePhoneNumber(string phoneNumber)
+        {
+            var user = await _userRepository.QueryAsNoTracking().Where(u => u.PhoneNumber == phoneNumber).Select(u => u.PhoneNumber).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return await Task.FromResult(new ValidatedRegisterResult
+                {
+                    IsValid = true,
+                    Message = ""
+                });
+            }
+
+            return await Task.FromResult(new ValidatedRegisterResult
+            {
+                IsValid = false,
+                Message = "This telephone was already existed"
+            });
         }
     }
 }
