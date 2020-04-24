@@ -13,5 +13,7 @@ namespace Hera.Services.Businesses
         JwtSecurityUserTokenViewModel GenerateToken(UserLoginRepsonseService userLogin);
         Task<JwtTokenViewModel> AcquireNewToken(UserCredentials userCredentials, JwtTokenViewModel jwtToken);
         Task DeactivateOldUserToken(string userId);
+        Task<ValidatedRegisterResult> ValidateEmail(string email);
+        Task<ValidatedRegisterResult> ValidatePhoneNumber(string email);
     }
 }

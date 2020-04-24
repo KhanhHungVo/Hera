@@ -56,12 +56,18 @@ namespace Hera.Common.WebAPI
         }
 
         [NonAction]
-        public IActionResult HeraBadRequest()
+        public IActionResult HeraBadRequest(string message = null)
         {
             string messages = string.Join("; ", ModelState.Values
                                                           .SelectMany(x => x.Errors)
                                                           .Select(x => x.ErrorMessage));
-            return BadRequest(messages);
+            if (String.IsNullOrEmpty(message))
+            {
+                return BadRequest(messages);
+            }
+
+            return BadRequest($"{message}; {messages}");
+            
         }
 
         protected void SetUserCredentialsFromAccessToken(string accessToken)
