@@ -58,7 +58,7 @@ namespace Hera.Data.Entities
             binder.Entity<UserEntity>()
                   .Property(u => u.Band)
                   .HasColumnType("NUMERIC(3,1)")
-                  .IsRequired();
+                  .HasDefaultValue(0.0f);
 
             binder.Entity<UserEntity>()
                   .Property(u => u.Age)
@@ -83,7 +83,7 @@ namespace Hera.Data.Entities
             binder.Entity<UserEntity>()
                   .Property(u => u.LastName)
                   .HasColumnType("VARCHAR(100)")
-                  .IsRequired();
+                  .HasDefaultValue("");
 
             binder.Entity<UserEntity>()
                   .Property(u => u.HashedPassword)
