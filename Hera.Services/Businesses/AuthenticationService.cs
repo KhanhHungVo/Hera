@@ -48,12 +48,12 @@ namespace Hera.Services.Businesses
 
             var userEntity = new UserEntity
             {
-                Username = userRegister.Username,
+                Username = userRegister.Email,
                 FirstName = userRegister.FirstName,
                 LastName = userRegister.LastName,
-                Age = userRegister.Age,
-                Band = userRegister.Band,
-                Email = userRegister.Username,
+                //Age = userRegister.Age,
+                //Band = userRegister.Band,
+                Email = userRegister.Email,
                 PhoneNumber = userRegister.Telephone,
                 HashedPassword = userRegister.Password,
             };
