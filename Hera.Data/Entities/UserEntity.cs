@@ -87,8 +87,7 @@ namespace Hera.Data.Entities
 
             binder.Entity<UserEntity>()
                   .Property(u => u.HashedPassword)
-                  .HasColumnType("VARCHAR")
-                  .IsRequired();
+                  .HasColumnType("VARCHAR");
 
             binder.Entity<UserEntity>()
                   .Property(u => u.Email)

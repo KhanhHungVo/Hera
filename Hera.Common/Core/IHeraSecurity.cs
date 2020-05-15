@@ -6,7 +6,7 @@ namespace Hera.Common.Core
 {
     public interface IHeraSecurity
     {
-        byte[] EncryptAes(string source);
+        string EncryptAes(string source);
         string DecryptAes(byte[] encryptedBytes);
     }
 }

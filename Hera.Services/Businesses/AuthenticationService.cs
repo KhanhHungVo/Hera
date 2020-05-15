@@ -307,5 +307,46 @@ namespace Hera.Services.Businesses
                 Message = "This telephone was already existed"
             });
         }
+
+        public async Task<JwtTokenViewModel> AuthenticateWithGoogle(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload)
+        {
+            var user = await this.FindUserOrAdd(payload);
+            var jwtSecurityToken = GenerateToken(user);
+
+            await DeactivateOldUserToken(user.UserId);
+            SaveUserToken(user.UserId, jwtSecurityToken);
+
+            await _repository.SaveChangesAsync();
+
+            return MapJwtTokenViewModel(jwtSecurityToken);
+        }
+        private async Task<UserLoginRepsonseService> FindUserOrAdd(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload)
+        {
+            var user = await GetUserByEmail(payload.Email);
+            if (user == null)
+            {
+                var userEntity = new UserEntity
+                {
+                    Username = payload.Email,
+                    FirstName = payload.GivenName,
+                    LastName = payload.FamilyName,
+                    //Age = userRegister.Age,
+                    //Band = userRegister.Band,
+                    Email = payload.Email
+                };
+                _repository.Add(userEntity);
+                await _repository.SaveChangesAsync();
+                user = MapUserLoginResponseService(userEntity);
+            }
+            return user;
+        }
+        public async Task<UserLoginRepsonseService> GetUserByEmail(string email)
+        {
+            var query = _repository.QueryAsNoTracking()
+                                   .Where(u => u.Email == email);
+            var userEntity = await query.FirstOrDefaultAsync();
+
+            return MapUserLoginResponseService(userEntity);
+        }
     }
 }

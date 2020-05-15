@@ -1,12 +1,19 @@
-﻿using Hera.Common.Core;
+﻿using Google.Apis.Auth;
+using Hera.Common.Core;
 using Hera.Common.WebAPI;
 using Hera.Services.Businesses;
+using Hera.Services.Models;
 using Hera.Services.ViewModels.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hera.WebAPI.Controllers
@@ -37,8 +44,7 @@ namespace Hera.WebAPI.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterViewModel userRegister)
         {
-            byte[] encodedBytes = _heraSecurity.EncryptAes(userRegister.Password);
-            string hashedPassword = Convert.ToBase64String(encodedBytes);
+            string hashedPassword = _heraSecurity.EncryptAes(userRegister.Password);
 
             userRegister.Password = hashedPassword;
             var newUser = await _authenticationService.Register(userRegister);
@@ -95,8 +101,7 @@ namespace Hera.WebAPI.Controllers
                 return HeraBadRequest();
             }
 
-            byte[] encodedBytes = _heraSecurity.EncryptAes(model.Password);
-            string hashedPassword = Convert.ToBase64String(encodedBytes);
+            string hashedPassword = _heraSecurity.EncryptAes(model.Password);
 
             var tokenResult = await _authenticationService.SignIn(model.Username, hashedPassword);
             if (tokenResult == null)
@@ -125,6 +130,21 @@ namespace Hera.WebAPI.Controllers
             }
 
             return HeraOk(newJwtToken);
+        }
+
+        [HttpPost]
+        [Route("sigin-google")]
+        public async Task<IActionResult> LoginWithGoogle([FromBody]GoogleUserInfo model)
+        {
+            var payload = GoogleJsonWebSignature.ValidateAsync(model.TokenId, new GoogleJsonWebSignature.ValidationSettings()).Result;
+            _logger.Information(payload.ExpirationTimeSeconds.ToString());
+            var jwtToken = await _authenticationService.AuthenticateWithGoogle(payload);
+           
+            if (jwtToken == null)
+            {
+                return HeraNoContent();
+            }
+            return HeraOk(jwtToken);
         }
     }
 }

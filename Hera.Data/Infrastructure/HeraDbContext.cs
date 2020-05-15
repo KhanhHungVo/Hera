@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Hera.Common.Core;
+using Hera.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -19,6 +21,8 @@ namespace Hera.Data.Infrastructure
         {
             InitializePostgresUuidV4();
         }
+        public DbSet<UserEntity> entities { get; set; }
+        public DbSet<TopicEntity> topics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

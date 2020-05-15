@@ -50,6 +50,7 @@ namespace Hera.Common.Middleware
                 context.Response.Clear();
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(new HeraExceptionResponse(ex)));
+                throw;
             }
         }
     }

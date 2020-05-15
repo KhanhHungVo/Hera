@@ -15,5 +15,6 @@ namespace Hera.Services.Businesses
         Task DeactivateOldUserToken(string userId);
         Task<ValidatedRegisterResult> ValidateEmail(string email);
         Task<ValidatedRegisterResult> ValidatePhoneNumber(string email);
+        Task<JwtTokenViewModel> AuthenticateWithGoogle(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload);
     }
 }

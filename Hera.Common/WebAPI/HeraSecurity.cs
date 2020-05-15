@@ -24,7 +24,7 @@ namespace Hera.Common.WebAPI
             configuration.GetSection(HeraConstants.APP_SETTING__ENCRYPTION).Bind(_encryptionConfiguration);
         }
 
-        public byte[] EncryptAes(string source)
+        public string EncryptAes(string source)
         {
             if (string.IsNullOrWhiteSpace(source))
             {
@@ -61,7 +61,7 @@ namespace Hera.Common.WebAPI
             }
 
             // Return the encrypted bytes from the memory stream.
-            return encrypted;
+            return Convert.ToBase64String(encrypted);
         }
 
         public string DecryptAes(byte[] encryptedBytes)
