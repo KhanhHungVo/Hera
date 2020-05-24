@@ -104,10 +104,7 @@ namespace Hera.WebAPI.Controllers
             string hashedPassword = _heraSecurity.EncryptAes(model.Password);
 
             var tokenResult = await _authenticationService.SignIn(model.Username, hashedPassword);
-            if (tokenResult == null)
-            {
-                return HeraNoContent();
-            }
+
             return HeraOk(tokenResult);
         }
 
@@ -124,26 +121,28 @@ namespace Hera.WebAPI.Controllers
 
             var newJwtToken = await _authenticationService.AcquireNewToken(UserCredentials, jwtToken);
 
-            if (newJwtToken == null)
-            {
-                return HeraNoContent();
-            }
-
             return HeraOk(newJwtToken);
         }
 
         [HttpPost]
         [Route("sigin-google")]
-        public async Task<IActionResult> LoginWithGoogle([FromBody]GoogleUserInfo model)
+        public async Task<IActionResult> LoginWithGoogle([FromBody]SocialUserInfo model)
         {
             var payload = GoogleJsonWebSignature.ValidateAsync(model.TokenId, new GoogleJsonWebSignature.ValidationSettings()).Result;
             _logger.Information(payload.ExpirationTimeSeconds.ToString());
             var jwtToken = await _authenticationService.AuthenticateWithGoogle(payload);
-           
-            if (jwtToken == null)
+            return HeraOk(jwtToken);
+        }
+
+        [HttpPost]
+        [Route("signin-facebook")]
+        public async Task<IActionResult> LoginWithFaceBook([FromBody]SocialUserInfo fbUserInfo)
+        {
+            if (string.IsNullOrEmpty(fbUserInfo.TokenId))
             {
-                return HeraNoContent();
+                return HeraBadRequest("Token is null or empty");
             }
+            var jwtToken = await _authenticationService.AuthenticateWithFacebook(fbUserInfo);
             return HeraOk(jwtToken);
         }
     }

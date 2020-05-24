@@ -34,6 +34,10 @@ namespace Hera.Common.WebAPI
         [NonAction]
         public IActionResult HeraOk(object data)
         {
+            if(data is null)
+            {
+                return NoContent();
+            }
             return Ok(data);
         }
 

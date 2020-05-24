@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -72,14 +74,8 @@ namespace Hera.Services.Businesses
             {
                 return null;
             }
-            var jwtSecurityToken = GenerateToken(user);
 
-            await DeactivateOldUserToken(user.UserId);
-            SaveUserToken(user.UserId, jwtSecurityToken);
-
-            await _repository.SaveChangesAsync();
-
-            return MapJwtTokenViewModel(jwtSecurityToken);
+            return await CreateTokenFromUserLogin(user);
         }
 
         public JwtSecurityUserTokenViewModel GenerateToken(UserLoginRepsonseService user)
@@ -310,30 +306,54 @@ namespace Hera.Services.Businesses
 
         public async Task<JwtTokenViewModel> AuthenticateWithGoogle(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload)
         {
-            var user = await this.FindUserOrAdd(payload);
-            var jwtSecurityToken = GenerateToken(user);
-
-            await DeactivateOldUserToken(user.UserId);
-            SaveUserToken(user.UserId, jwtSecurityToken);
-
-            await _repository.SaveChangesAsync();
-
-            return MapJwtTokenViewModel(jwtSecurityToken);
+            UserEntity userEntity = MapUserFromGooglePayload(payload);
+            UserLoginRepsonseService user = await FindUserOrAdd(userEntity);
+            return await CreateTokenFromUserLogin(user);
         }
-        private async Task<UserLoginRepsonseService> FindUserOrAdd(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload)
+
+        public async Task<JwtTokenViewModel> AuthenticateWithFacebook(SocialUserInfo fbUserInfo)
         {
-            var user = await GetUserByEmail(payload.Email);
+            HttpClient http = new HttpClient
+            {
+                BaseAddress = new Uri("https://graph.facebook.com/v7.0/")
+            };
+            http.DefaultRequestHeaders
+                .Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var result = await GetAsync<dynamic>(http, fbUserInfo.TokenId, fbUserInfo.UserId, "fields=email,first_name,last_name,picture");
+            if(result is null)
+            {
+                throw new Exception("User from this token not exist");
+            }
+            var userEntity = MapUserFromSocialUserInfo(new SocialUserInfo
+            {
+                UserId = fbUserInfo.UserId,
+                TokenId = fbUserInfo.TokenId,
+                Email = result.email ?? fbUserInfo.Email,
+                FirstName = result.first_name ?? fbUserInfo.FirstName,
+                LastName = result.last_name ?? fbUserInfo.LastName,
+                ProfilePicture = result.picture.data.url ?? fbUserInfo.ProfilePicture
+            });
+            UserLoginRepsonseService user = await FindUserOrAdd(userEntity);
+            return await CreateTokenFromUserLogin(user);
+        }
+
+        private async Task<T> GetAsync<T>(HttpClient http,string accessToken, string endpoint, string args = null)
+        {
+            var response = await http.GetAsync($"{endpoint}?access_token={accessToken}&{args}");
+            if (!response.IsSuccessStatusCode)
+                return default(T);
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<T>(result);
+        }
+
+        private async Task<UserLoginRepsonseService> FindUserOrAdd(UserEntity userEntity)
+        {
+            var user = await GetUserByEmail(userEntity.Email);
             if (user == null)
             {
-                var userEntity = new UserEntity
-                {
-                    Username = payload.Email,
-                    FirstName = payload.GivenName,
-                    LastName = payload.FamilyName,
-                    //Age = userRegister.Age,
-                    //Band = userRegister.Band,
-                    Email = payload.Email
-                };
                 _repository.Add(userEntity);
                 await _repository.SaveChangesAsync();
                 user = MapUserLoginResponseService(userEntity);
@@ -347,6 +367,46 @@ namespace Hera.Services.Businesses
             var userEntity = await query.FirstOrDefaultAsync();
 
             return MapUserLoginResponseService(userEntity);
+        }
+
+        private UserEntity MapUserFromGooglePayload(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload)
+        {
+            return new UserEntity
+            {
+                Username = payload.Email,
+                FirstName = payload.GivenName,
+                LastName = payload.FamilyName,
+                ProfilePicture = payload.Picture,
+                //Age = userRegister.Age,
+                //Band = userRegister.Band,
+                Email = payload.Email
+            };
+        }
+
+        private UserEntity MapUserFromSocialUserInfo(SocialUserInfo socialUserInfo)
+        {
+            return new UserEntity
+            {
+                Username = socialUserInfo.Email,
+                FirstName = socialUserInfo.FirstName,
+                LastName = socialUserInfo.LastName,
+                ProfilePicture = socialUserInfo.ProfilePicture,
+                //Age = userRegister.Age,
+                //Band = userRegister.Band,
+                Email = socialUserInfo.Email
+            };
+        }
+
+        private async Task<JwtTokenViewModel> CreateTokenFromUserLogin(UserLoginRepsonseService user)
+        {
+            var jwtSecurityToken = GenerateToken(user);
+
+            await DeactivateOldUserToken(user.UserId);
+            SaveUserToken(user.UserId, jwtSecurityToken);
+
+            await _repository.SaveChangesAsync();
+
+            return MapJwtTokenViewModel(jwtSecurityToken);
         }
     }
 }
