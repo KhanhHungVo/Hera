@@ -53,6 +53,7 @@ namespace Hera.WebAPI
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ITopicCategoriesService, TopicCategoriesService>();
             services.AddScoped<ITopicsService, TopicsService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddTransient(typeof(IRepositoryBaseTypeId<,>), typeof(RepositoryBaseTypeId<,>));
             services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));

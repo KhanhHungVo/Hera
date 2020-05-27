@@ -7,10 +7,9 @@ namespace Hera.Services.Businesses
 {
     public interface IAuthenticationService : IServiceBaseTypeId<UserEntity, string>
     {
-        Task<UserLoginRepsonseService> GetUserLogin(string username, string hashedPassword);
         Task<JwtTokenViewModel> SignIn(string userName, string hashedPassword);
-        Task<UserRegisterViewModel> Register(UserRegisterViewModel userRegister);
-        JwtSecurityUserTokenViewModel GenerateToken(UserLoginRepsonseService userLogin);
+        Task<UserResponseViewModel> Register(UserRegisterViewModel userRegister);
+        JwtSecurityUserTokenViewModel GenerateToken(UserResponseViewModel userLogin);
         Task<JwtTokenViewModel> AcquireNewToken(UserCredentials userCredentials, JwtTokenViewModel jwtToken);
         Task DeactivateOldUserToken(string userId);
         Task<ValidatedRegisterResult> ValidateEmail(string email);

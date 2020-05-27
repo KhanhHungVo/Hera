@@ -24,52 +24,28 @@ namespace Hera.Services.Businesses
     public class AuthenticationService : ServiceBaseTypeId<UserEntity, string>, IAuthenticationService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
         private readonly JwtTokenDescriptorOptions _tokenDescriptorOptions;
 
         public AuthenticationService(
             IUserRepository repository,
+            IUserService userService,
             IOptions<JwtTokenDescriptorOptions> tokenDescriptorOptions
         ) : base(repository)
         {
             _userRepository = repository;
+            _userService = userService;
             _tokenDescriptorOptions = tokenDescriptorOptions.Value;
         }
 
-        public async Task<UserLoginRepsonseService> GetUserLogin(string username, string hashedPassword)
+        public async Task<UserResponseViewModel> Register(UserRegisterViewModel userRegister)
         {
-            var query = _repository.QueryAsNoTracking()
-                                   .Where(u => username.Equals(u.Username) &&
-                                               hashedPassword.Equals(u.HashedPassword));
-            var userEntity = await query.FirstOrDefaultAsync();
-
-            return MapUserLoginResponseService(userEntity);
-        }
-
-        public async Task<UserRegisterViewModel> Register(UserRegisterViewModel userRegister)
-        {
-
-            var userEntity = new UserEntity
-            {
-                Username = userRegister.Email,
-                FirstName = userRegister.FirstName,
-                LastName = userRegister.LastName,
-                //Age = userRegister.Age,
-                //Band = userRegister.Band,
-                Email = userRegister.Email,
-                PhoneNumber = userRegister.Telephone,
-                HashedPassword = userRegister.Password,
-            };
-            userEntity.DOB = new DateTime(DateTime.UtcNow.Year - userEntity.Age, 8, 4);
-
-            _repository.Add(userEntity);
-            await _repository.SaveChangesAsync();
-
-            return userRegister.WithoutPassword();
+            return await _userService.CreateUserAsync(userRegister);
         }
 
         public async Task<JwtTokenViewModel> SignIn(string userName, string hashedPassword)
         {
-            var user = await GetUserLogin(userName, hashedPassword);
+            var user = await _userService.GetByLoginAsync(userName, hashedPassword);
             if (user == null)
             {
                 return null;
@@ -78,7 +54,7 @@ namespace Hera.Services.Businesses
             return await CreateTokenFromUserLogin(user);
         }
 
-        public JwtSecurityUserTokenViewModel GenerateToken(UserLoginRepsonseService user)
+        public JwtSecurityUserTokenViewModel GenerateToken(UserResponseViewModel user)
         {
             var claims = new List<Claim>
             {
@@ -141,7 +117,7 @@ namespace Hera.Services.Businesses
                 throw new SecurityTokenException("You can use this access token until it's expired, bro");
             }
 
-            var userLoginResponse = MapUserLoginResponseService(userToken.User);
+            var userLoginResponse = _userService.MapUserResponseFromEntity(userToken.User);
 
             var jwtSecurityToken = GenerateToken(userLoginResponse);
 
@@ -169,21 +145,6 @@ namespace Hera.Services.Businesses
                 token.IsActive = false;
                 _userRepository.SetEntityPropertiesHasModified<UserTokenEntity, string>(token, new string[] { nameof(UserTokenEntity.IsActive) });
             }
-        }
-
-        private UserLoginRepsonseService MapUserLoginResponseService(UserEntity userEntity)
-        {
-            return userEntity == null ? null : new UserLoginRepsonseService
-            {
-                UserId = userEntity.Id,
-                Username = userEntity.Username,
-                FirstName = userEntity.FirstName,
-                LastName = userEntity.LastName,
-                Band = userEntity.Band,
-                Telephone = userEntity.PhoneNumber,
-                Email = userEntity.Email,
-                Onboarding = userEntity.Onboarding,
-            };
         }
 
         private JwtSecurityToken GenerateJwtSercurityAccessToken(IList<Claim> claims)
@@ -247,7 +208,7 @@ namespace Hera.Services.Businesses
                     UserId = userId
                 };
 
-                _userRepository.Add<UserTokenEntity, string>(userToken);                
+                _userRepository.Add<UserTokenEntity, string>(userToken);
             }
             catch (Exception ex)
             {
@@ -307,7 +268,7 @@ namespace Hera.Services.Businesses
         public async Task<JwtTokenViewModel> AuthenticateWithGoogle(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload)
         {
             UserEntity userEntity = MapUserFromGooglePayload(payload);
-            UserLoginRepsonseService user = await FindUserOrAdd(userEntity);
+            UserResponseViewModel user = await _userService.FindUserOrCreate(userEntity);
             return await CreateTokenFromUserLogin(user);
         }
 
@@ -321,7 +282,7 @@ namespace Hera.Services.Businesses
                 .Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var result = await GetAsync<dynamic>(http, fbUserInfo.TokenId, fbUserInfo.UserId, "fields=email,first_name,last_name,picture");
-            if(result is null)
+            if (result is null)
             {
                 throw new Exception("User from this token not exist");
             }
@@ -334,11 +295,11 @@ namespace Hera.Services.Businesses
                 LastName = result.last_name ?? fbUserInfo.LastName,
                 ProfilePicture = result.picture.data.url ?? fbUserInfo.ProfilePicture
             });
-            UserLoginRepsonseService user = await FindUserOrAdd(userEntity);
+            UserResponseViewModel user = await _userService.FindUserOrCreate(userEntity);
             return await CreateTokenFromUserLogin(user);
         }
 
-        private async Task<T> GetAsync<T>(HttpClient http,string accessToken, string endpoint, string args = null)
+        private async Task<T> GetAsync<T>(HttpClient http, string accessToken, string endpoint, string args = null)
         {
             var response = await http.GetAsync($"{endpoint}?access_token={accessToken}&{args}");
             if (!response.IsSuccessStatusCode)
@@ -347,26 +308,6 @@ namespace Hera.Services.Businesses
             var result = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<T>(result);
-        }
-
-        private async Task<UserLoginRepsonseService> FindUserOrAdd(UserEntity userEntity)
-        {
-            var user = await GetUserByEmail(userEntity.Email);
-            if (user == null)
-            {
-                _repository.Add(userEntity);
-                await _repository.SaveChangesAsync();
-                user = MapUserLoginResponseService(userEntity);
-            }
-            return user;
-        }
-        public async Task<UserLoginRepsonseService> GetUserByEmail(string email)
-        {
-            var query = _repository.QueryAsNoTracking()
-                                   .Where(u => u.Email == email);
-            var userEntity = await query.FirstOrDefaultAsync();
-
-            return MapUserLoginResponseService(userEntity);
         }
 
         private UserEntity MapUserFromGooglePayload(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload)
@@ -397,7 +338,7 @@ namespace Hera.Services.Businesses
             };
         }
 
-        private async Task<JwtTokenViewModel> CreateTokenFromUserLogin(UserLoginRepsonseService user)
+        private async Task<JwtTokenViewModel> CreateTokenFromUserLogin(UserResponseViewModel user)
         {
             var jwtSecurityToken = GenerateToken(user);
 
