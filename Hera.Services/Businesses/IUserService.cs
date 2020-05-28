@@ -10,14 +10,14 @@ namespace Hera.Services.Businesses
 {
     public interface IUserService : IServiceBaseTypeId<UserEntity, string>
     {
-        Task<UserResponseViewModel> CreateUserAsync(UserRegisterViewModel userRegister);
-        Task<IEnumerable<UserResponseViewModel>> GetListAsync();
-        Task<UserResponseViewModel> GetById(string id);
-        Task<UserResponseViewModel> GetByEmail(string email);
-        Task<UserResponseViewModel> GetByLoginAsync(string username, string hashedPassword);
-        Task UpdateUser(UserEntity entity);
+        Task<UserViewModel> CreateUserAsync(UserRegisterViewModel userRegister);
+        Task<IEnumerable<UserViewModel>> GetListAsync();
+        Task<UserViewModel> GetById(string id);
+        Task<UserViewModel> GetByEmail(string email);
+        Task<UserViewModel> GetByLoginAsync(string username, string hashedPassword);
+        Task<UserEntity> UpdateUser(UserViewModel model);
         Task DeleteUser(string id);
-        UserResponseViewModel MapUserResponseFromEntity(UserEntity userEntity);
-        Task<UserResponseViewModel> FindUserOrCreate(UserEntity userEntity);
+        UserViewModel MapToViewModel(UserEntity userEntity);
+        Task<UserViewModel> FindUserOrCreate(UserEntity userEntity);
     }
 }

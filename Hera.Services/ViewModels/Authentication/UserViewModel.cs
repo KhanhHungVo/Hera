@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace Hera.Services.ViewModels.Authentication
 {
-    public class UserResponseViewModel
+    public class UserViewModel
     {
         [JsonIgnore]
         public string UserId { get; set; }
@@ -17,5 +17,6 @@ namespace Hera.Services.ViewModels.Authentication
         public string Telephone { get; set; }
         public string Email { get; set; }
         public bool Onboarding { get; set; }
+        public string ProfilePicture { get; set; }
     }
 }

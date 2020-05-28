@@ -38,7 +38,7 @@ namespace Hera.Services.Businesses
             _tokenDescriptorOptions = tokenDescriptorOptions.Value;
         }
 
-        public async Task<UserResponseViewModel> Register(UserRegisterViewModel userRegister)
+        public async Task<UserViewModel> Register(UserRegisterViewModel userRegister)
         {
             return await _userService.CreateUserAsync(userRegister);
         }
@@ -54,7 +54,7 @@ namespace Hera.Services.Businesses
             return await CreateTokenFromUserLogin(user);
         }
 
-        public JwtSecurityUserTokenViewModel GenerateToken(UserResponseViewModel user)
+        public JwtSecurityUserTokenViewModel GenerateToken(UserViewModel user)
         {
             var claims = new List<Claim>
             {
@@ -117,7 +117,7 @@ namespace Hera.Services.Businesses
                 throw new SecurityTokenException("You can use this access token until it's expired, bro");
             }
 
-            var userLoginResponse = _userService.MapUserResponseFromEntity(userToken.User);
+            var userLoginResponse = _userService.MapToViewModel(userToken.User);
 
             var jwtSecurityToken = GenerateToken(userLoginResponse);
 
@@ -268,7 +268,7 @@ namespace Hera.Services.Businesses
         public async Task<JwtTokenViewModel> AuthenticateWithGoogle(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload)
         {
             UserEntity userEntity = MapUserFromGooglePayload(payload);
-            UserResponseViewModel user = await _userService.FindUserOrCreate(userEntity);
+            UserViewModel user = await _userService.FindUserOrCreate(userEntity);
             return await CreateTokenFromUserLogin(user);
         }
 
@@ -295,7 +295,7 @@ namespace Hera.Services.Businesses
                 LastName = result.last_name ?? fbUserInfo.LastName,
                 ProfilePicture = result.picture.data.url ?? fbUserInfo.ProfilePicture
             });
-            UserResponseViewModel user = await _userService.FindUserOrCreate(userEntity);
+            UserViewModel user = await _userService.FindUserOrCreate(userEntity);
             return await CreateTokenFromUserLogin(user);
         }
 
@@ -338,7 +338,7 @@ namespace Hera.Services.Businesses
             };
         }
 
-        private async Task<JwtTokenViewModel> CreateTokenFromUserLogin(UserResponseViewModel user)
+        private async Task<JwtTokenViewModel> CreateTokenFromUserLogin(UserViewModel user)
         {
             var jwtSecurityToken = GenerateToken(user);
 

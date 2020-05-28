@@ -22,7 +22,7 @@ namespace Hera.Services.Businesses
             _userRepository = userRepository;
         }
 
-        public async Task<UserResponseViewModel> CreateUserAsync(UserRegisterViewModel userRegister)
+        public async Task<UserViewModel> CreateUserAsync(UserRegisterViewModel userRegister)
         {
             var userEntity = new UserEntity
             {
@@ -40,7 +40,7 @@ namespace Hera.Services.Businesses
             _userRepository.Add(userEntity);
             await _userRepository.SaveChangesAsync();
 
-            return MapUserResponseFromEntity(userEntity);
+            return MapToViewModel(userEntity);
         }
 
         public async Task DeleteUser(string id)
@@ -52,37 +52,39 @@ namespace Hera.Services.Businesses
             await _repository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<UserResponseViewModel>> GetListAsync()
+        public async Task<IEnumerable<UserViewModel>> GetListAsync()
         {
             List<UserEntity> users =  await _repository.QueryAsNoTracking().ToListAsync();
-            return users.Select(MapUserResponseFromEntity).ToList();
+            return users.Select(MapToViewModel).ToList();
         }
 
-        public async Task<UserResponseViewModel> GetById(string id)
+        public async Task<UserViewModel> GetById(string id)
         {
             var user = await _userRepository.QueryAsNoTracking()
                                    .Where(u => u.Id == id).FirstOrDefaultAsync();
-            return MapUserResponseFromEntity(user);
+            return MapToViewModel(user);
         }
 
-        public async Task<UserResponseViewModel> GetByLoginAsync(string username, string hashedPassword)
+        public async Task<UserViewModel> GetByLoginAsync(string username, string hashedPassword)
         {
             var query = _userRepository.QueryAsNoTracking()
                                    .Where(u => username.Equals(u.Username) &&
                                                hashedPassword.Equals(u.HashedPassword));
             var userEntity = await query.FirstOrDefaultAsync();
 
-            return MapUserResponseFromEntity(userEntity);
+            return MapToViewModel(userEntity);
         }
 
-        public Task UpdateUser(UserEntity entity)
+        public async Task<UserEntity> UpdateUser(UserViewModel model)
         {
-            throw new NotImplementedException();
+            var userEntity = MapFromViewModel(model);
+            return await _userRepository.UpdateAsync(userEntity);
+           
         }
 
-        public UserResponseViewModel MapUserResponseFromEntity(UserEntity userEntity)
+        public UserViewModel MapToViewModel(UserEntity userEntity)
         {
-            return userEntity == null ? null : new UserResponseViewModel
+            return userEntity == null ? null : new UserViewModel
             {
                 UserId = userEntity.Id,
                 Username = userEntity.Username,
@@ -95,25 +97,39 @@ namespace Hera.Services.Businesses
             };
         }
 
-        public async Task<UserResponseViewModel> FindUserOrCreate(UserEntity userEntity)
+        public UserEntity MapFromViewModel(UserViewModel model)
+        {
+            return new UserEntity { 
+                Username = model.Username,
+                Band = model.Band,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                PhoneNumber = model.Telephone,
+                ProfilePicture = model.ProfilePicture,
+                Onboarding = model.Onboarding
+            };
+        }
+
+        public async Task<UserViewModel> FindUserOrCreate(UserEntity userEntity)
         {
             var user = await GetByEmail(userEntity.Email);
             if (user == null)
             {
                 _repository.Add(userEntity);
                 await _repository.SaveChangesAsync();
-                user = MapUserResponseFromEntity(userEntity);
+                user = MapToViewModel(userEntity);
             }
             return user;
         }
 
-        public async Task<UserResponseViewModel> GetByEmail(string email)
+        public async Task<UserViewModel> GetByEmail(string email)
         {
             var query = _repository.QueryAsNoTracking()
                                    .Where(u => u.Email == email);
             var userEntity = await query.FirstOrDefaultAsync();
 
-            return MapUserResponseFromEntity(userEntity);
+            return MapToViewModel(userEntity);
         }
     }
 }
