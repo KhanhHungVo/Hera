@@ -75,11 +75,11 @@ namespace Hera.Services.Businesses
             return MapToViewModel(userEntity);
         }
 
-        public async Task<UserEntity> UpdateUser(UserViewModel model)
+        public async Task<UserViewModel> UpdateUser(UserViewModel model)
         {
             var userEntity = MapFromViewModel(model);
-            return await _userRepository.UpdateAsync(userEntity);
-           
+            await _userRepository.UpdateAsync(userEntity);
+            return MapToViewModel(userEntity);
         }
 
         public UserViewModel MapToViewModel(UserEntity userEntity)

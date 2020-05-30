@@ -15,7 +15,7 @@ namespace Hera.Services.Businesses
         Task<UserViewModel> GetById(string id);
         Task<UserViewModel> GetByEmail(string email);
         Task<UserViewModel> GetByLoginAsync(string username, string hashedPassword);
-        Task<UserEntity> UpdateUser(UserViewModel model);
+        Task<UserViewModel> UpdateUser(UserViewModel model);
         Task DeleteUser(string id);
         UserViewModel MapToViewModel(UserEntity userEntity);
         Task<UserViewModel> FindUserOrCreate(UserEntity userEntity);
