@@ -38,6 +38,13 @@ namespace Hera.WebAPI.Controllers
             return HeraOk(user);
         }
 
+        [HttpGet("{email}")]
+        public async Task<IActionResult> GeByEmailAsync(string email)
+        {
+            var user = await _userService.GetByEmail(email);
+            return HeraOk(user);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser([FromBody] UserViewModel model)
         {
