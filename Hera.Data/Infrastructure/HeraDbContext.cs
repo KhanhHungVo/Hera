@@ -21,8 +21,8 @@ namespace Hera.Data.Infrastructure
         {
             InitializePostgresUuidV4();
         }
-        public DbSet<UserEntity> entities { get; set; }
-        public DbSet<TopicEntity> topics { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
+        public DbSet<TopicEntity> Topics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

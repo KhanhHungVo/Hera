@@ -1,10 +1,15 @@
-﻿using Hera.Common.WebAPI;
+﻿using Hera.Common.Core;
+using Hera.Common.WebAPI;
 using Hera.Services.Businesses;
 using Hera.Services.ViewModels.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Newtonsoft.Json;
 using Serilog;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 
@@ -23,7 +28,18 @@ namespace Hera.WebAPI.Controllers
         {
             _userService = userService;
         }
-        
+
+        [HttpGet]
+        [Route("info")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var userDataClaim = User.Claims.FirstOrDefault(c => c.Type == HeraConstants.CLAIM_TYPE_USER_DATA)?.Value;
+
+            var userCredentials = JsonConvert.DeserializeObject<UserCredentials>(userDataClaim);
+            var user = await _userService.GetByEmail(userCredentials.EmailAddress);
+            return HeraOk(user);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetUserAsync()
         {

@@ -47,6 +47,11 @@ namespace Hera.WebAPI.Controllers
             string hashedPassword = _heraSecurity.EncryptAes(userRegister.Password);
 
             userRegister.Password = hashedPassword;
+            var errorMessage = await _authenticationService.ValidateUserDefinedRules(userRegister);
+            if(errorMessage != null)
+            {
+                return HeraBadRequest(errorMessage);
+            }
             var newUser = await _authenticationService.Register(userRegister);
 
             return HeraCreated(newUser);
@@ -126,11 +131,13 @@ namespace Hera.WebAPI.Controllers
 
         [HttpPost]
         [Route("sigin-google")]
-        public async Task<IActionResult> LoginWithGoogle([FromBody]SocialUserInfo model)
+        public async Task<IActionResult> LoginWithGoogle([FromBody]SocialUserInfo ggUserInfo)
         {
-            var payload = GoogleJsonWebSignature.ValidateAsync(model.TokenId, new GoogleJsonWebSignature.ValidationSettings()).Result;
-            _logger.Information(payload.ExpirationTimeSeconds.ToString());
-            var jwtToken = await _authenticationService.AuthenticateWithGoogle(payload);
+            if (string.IsNullOrEmpty(ggUserInfo.TokenId))
+            {
+                return HeraBadRequest("Token is null or empty");
+            }
+            var jwtToken = await _authenticationService.AuthenticateWithGoogle(ggUserInfo);
             return HeraOk(jwtToken);
         }
 

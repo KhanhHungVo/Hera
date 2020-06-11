@@ -15,12 +15,13 @@ namespace Hera.Data.Repositories
         public async Task<UserEntity> UpdateAsync(UserEntity entity)
         {
             //DbSet.Update(entity);
+            
             DbSet.Attach(entity);
             Context.Entry(entity).State = EntityState.Modified;
+            Context.Entry(entity).Property(x => x.Id).IsModified = false;
             Context.Entry(entity).Property(x => x.HashedPassword).IsModified = false;
             Context.Entry(entity).Property(x => x.CreatedDate).IsModified = false;
             Context.Entry(entity).Property(x => x.Age).IsModified = false;
-            Context.Entry(entity).Property(x => x.UserTokens).IsModified = false;
 
             await Context.SaveChangesAsync();
             return entity;

@@ -54,7 +54,7 @@ namespace Hera.Services.Businesses
 
         public async Task<IEnumerable<UserViewModel>> GetListAsync()
         {
-            List<UserEntity> users =  await _repository.QueryAsNoTracking().ToListAsync();
+            List<UserEntity> users = await _repository.QueryAsNoTracking().ToListAsync();
             return users.Select(MapToViewModel).ToList();
         }
 
@@ -94,12 +94,15 @@ namespace Hera.Services.Businesses
                 Telephone = userEntity.PhoneNumber,
                 Email = userEntity.Email,
                 Onboarding = userEntity.Onboarding,
+                ProfilePicture = userEntity.ProfilePicture
             };
         }
 
         public UserEntity MapFromViewModel(UserViewModel model)
         {
-            return new UserEntity { 
+            return new UserEntity
+            {
+                Id = model.UserId,
                 Username = model.Username,
                 Band = model.Band,
                 FirstName = model.FirstName,
@@ -119,6 +122,31 @@ namespace Hera.Services.Businesses
                 _repository.Add(userEntity);
                 await _repository.SaveChangesAsync();
                 user = MapToViewModel(userEntity);
+            } 
+            return user;
+        }
+
+        public async Task<UserViewModel> FindUserOrCreateFromSocialAccount(SocialUserInfo socialUser)
+        {
+            var user = await GetByEmail(socialUser.Email);
+            
+            if (user == null)
+            {
+                var userEntity = new UserEntity
+                {
+                    Username = socialUser.Email,
+                    FirstName = socialUser.FirstName,
+                    LastName = socialUser.LastName,
+                    Email = socialUser.Email,
+                    ProfilePicture = socialUser.ProfilePicture,
+                };
+                _repository.Add(userEntity);
+                await _repository.SaveChangesAsync();
+                user = MapToViewModel(userEntity);
+            } else
+            {
+                user.ProfilePicture = socialUser.ProfilePicture;
+                await UpdateUser(user);
             }
             return user;
         }
@@ -130,6 +158,16 @@ namespace Hera.Services.Businesses
             var userEntity = await query.FirstOrDefaultAsync();
 
             return MapToViewModel(userEntity);
+        }
+
+        public async Task<string> ValidateUserDefinedRules(UserRegisterViewModel model)
+        {
+            var userWithSameEmail = await GetByEmail(model.Email);
+            if (userWithSameEmail != null)
+            {
+                return "Email is already exist";
+            }
+            return null;
         }
     }
 }

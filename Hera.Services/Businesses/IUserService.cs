@@ -19,5 +19,7 @@ namespace Hera.Services.Businesses
         Task DeleteUser(string id);
         UserViewModel MapToViewModel(UserEntity userEntity);
         Task<UserViewModel> FindUserOrCreate(UserEntity userEntity);
+        Task<string> ValidateUserDefinedRules(UserRegisterViewModel model);
+        Task<UserViewModel> FindUserOrCreateFromSocialAccount(SocialUserInfo socialUser);
     }
 }

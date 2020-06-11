@@ -1,4 +1,5 @@
-﻿using Hera.Common.Core;
+﻿using Google.Apis.Auth;
+using Hera.Common.Core;
 using Hera.Data.Entities;
 using Hera.Data.Infrastructure;
 using Hera.Services.ViewModels.Authentication;
@@ -41,6 +42,11 @@ namespace Hera.Services.Businesses
         public async Task<UserViewModel> Register(UserRegisterViewModel userRegister)
         {
             return await _userService.CreateUserAsync(userRegister);
+        }
+
+        public async Task<string> ValidateUserDefinedRules(UserRegisterViewModel userRegister)
+        {
+            return await _userService.ValidateUserDefinedRules(userRegister);
         }
 
         public async Task<JwtTokenViewModel> SignIn(string userName, string hashedPassword)
@@ -265,10 +271,20 @@ namespace Hera.Services.Businesses
             });
         }
 
-        public async Task<JwtTokenViewModel> AuthenticateWithGoogle(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload)
+        public async Task<JwtTokenViewModel> AuthenticateWithGoogle(SocialUserInfo ggUserInfo)
         {
-            UserEntity userEntity = MapUserFromGooglePayload(payload);
-            UserViewModel user = await _userService.FindUserOrCreate(userEntity);
+            var payload = GoogleJsonWebSignature.ValidateAsync(ggUserInfo.TokenId, new GoogleJsonWebSignature.ValidationSettings()).Result;
+            //_logger.Information(payload.ExpirationTimeSeconds.ToString());
+            if (payload is null)
+            {
+                throw new Exception("User from this token not exist");
+            }
+            ggUserInfo.Email = payload.Email;
+            ggUserInfo.FirstName = payload.GivenName;
+            ggUserInfo.LastName = payload.FamilyName;
+            ggUserInfo.ProfilePicture = payload.Picture;
+            UserEntity userEntity = MapUserFromSocialUserInfo(ggUserInfo);
+            UserViewModel user = await _userService.FindUserOrCreateFromSocialAccount(ggUserInfo);
             return await CreateTokenFromUserLogin(user);
         }
 
@@ -295,7 +311,15 @@ namespace Hera.Services.Businesses
                 LastName = result.last_name ?? fbUserInfo.LastName,
                 ProfilePicture = result.picture.data.url ?? fbUserInfo.ProfilePicture
             });
-            UserViewModel user = await _userService.FindUserOrCreate(userEntity);
+            UserViewModel user = await _userService.FindUserOrCreateFromSocialAccount(new SocialUserInfo
+            {
+                UserId = fbUserInfo.UserId,
+                TokenId = fbUserInfo.TokenId,
+                Email = result.email ?? fbUserInfo.Email,
+                FirstName = result.first_name ?? fbUserInfo.FirstName,
+                LastName = result.last_name ?? fbUserInfo.LastName,
+                ProfilePicture = result.picture.data.url ?? fbUserInfo.ProfilePicture
+            });
             return await CreateTokenFromUserLogin(user);
         }
 

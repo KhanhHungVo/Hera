@@ -6,7 +6,7 @@ namespace Hera.Common.Data
 {
     public abstract class EntityBaseTypeId<TId> : IEntityTypeId<TId>
     {
-        public TId Id { get; protected set; }
+        public TId Id { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime CreatedDate { get; protected set; }
