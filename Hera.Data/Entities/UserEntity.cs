@@ -23,7 +23,7 @@ namespace Hera.Data.Entities
 
         public DateTime? DOB { get; set; }
 
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
         public string FirstName { get; set; }
 
@@ -73,7 +73,7 @@ namespace Hera.Data.Entities
                  .IsRequired(false);
 
             binder.Entity<UserEntity>()
-                  .Property(u => u.Username)
+                  .Property(u => u.UserName)
                   .HasColumnType("VARCHAR(255)")
                   .IsRequired();
 

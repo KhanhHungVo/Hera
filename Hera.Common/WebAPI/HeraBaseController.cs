@@ -105,7 +105,7 @@ namespace Hera.Common.WebAPI
             {
                 SetUserCredentialsFromAccessToken(authorizationHeader.Replace("Bearer ", string.Empty));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

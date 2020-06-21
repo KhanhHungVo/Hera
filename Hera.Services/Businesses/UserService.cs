@@ -26,7 +26,7 @@ namespace Hera.Services.Businesses
         {
             var userEntity = new UserEntity
             {
-                Username = userRegister.Email,
+                UserName = userRegister.Email,
                 FirstName = userRegister.FirstName,
                 LastName = userRegister.LastName,
                 //Age = userRegister.Age,
@@ -68,7 +68,7 @@ namespace Hera.Services.Businesses
         public async Task<UserViewModel> GetByLoginAsync(string username, string hashedPassword)
         {
             var query = _userRepository.QueryAsNoTracking()
-                                   .Where(u => username.Equals(u.Username) &&
+                                   .Where(u => username.Equals(u.UserName) &&
                                                hashedPassword.Equals(u.HashedPassword));
             var userEntity = await query.FirstOrDefaultAsync();
 
@@ -87,7 +87,7 @@ namespace Hera.Services.Businesses
             return userEntity == null ? null : new UserViewModel
             {
                 UserId = userEntity.Id,
-                Username = userEntity.Username,
+                UserName = userEntity.UserName,
                 FirstName = userEntity.FirstName,
                 LastName = userEntity.LastName,
                 Band = userEntity.Band,
@@ -103,7 +103,7 @@ namespace Hera.Services.Businesses
             return new UserEntity
             {
                 Id = model.UserId,
-                Username = model.Username,
+                UserName = model.UserName,
                 Band = model.Band,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
@@ -134,7 +134,7 @@ namespace Hera.Services.Businesses
             {
                 var userEntity = new UserEntity
                 {
-                    Username = socialUser.Email,
+                    UserName = socialUser.Email,
                     FirstName = socialUser.FirstName,
                     LastName = socialUser.LastName,
                     Email = socialUser.Email,

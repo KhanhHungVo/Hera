@@ -338,7 +338,7 @@ namespace Hera.Services.Businesses
         {
             return new UserEntity
             {
-                Username = payload.Email,
+                UserName = payload.Email,
                 FirstName = payload.GivenName,
                 LastName = payload.FamilyName,
                 ProfilePicture = payload.Picture,
@@ -352,7 +352,7 @@ namespace Hera.Services.Businesses
         {
             return new UserEntity
             {
-                Username = socialUserInfo.Email,
+                UserName = socialUserInfo.Email,
                 FirstName = socialUserInfo.FirstName,
                 LastName = socialUserInfo.LastName,
                 ProfilePicture = socialUserInfo.ProfilePicture,

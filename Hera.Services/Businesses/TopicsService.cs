@@ -110,7 +110,7 @@ namespace Hera.Services.Businesses
         public async Task SaveTopicsThatUserInterests(UserCredentials userCredentials, IEnumerable<TopicUserOnboardingViewModel> topics)
         {
             var getUserTask = _repository.QueryAsNoTracking<UserEntity, string>()
-                                                        .Where(u => u.Username.Contains(userCredentials.EmailAddress))
+                                                        .Where(u => u.UserName.Contains(userCredentials.EmailAddress))
                                                         .Select(u => new UserEntity(u.Id)
                                                         {
                                                             Onboarding = u.Onboarding
