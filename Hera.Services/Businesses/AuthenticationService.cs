@@ -72,7 +72,7 @@ namespace Hera.Services.Businesses
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     EmailAddress = user.Email,
-                    MobilePhone = user.Telephone
+                    MobilePhone = user.PhoneNumber
                 }, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
             };
             var accessToken = GenerateJwtSercurityAccessToken(claims);
@@ -366,8 +366,8 @@ namespace Hera.Services.Businesses
         {
             var jwtSecurityToken = GenerateToken(user);
 
-            await DeactivateOldUserToken(user.UserId);
-            SaveUserToken(user.UserId, jwtSecurityToken);
+            await DeactivateOldUserToken(user.Id);
+            SaveUserToken(user.Id, jwtSecurityToken);
 
             await _repository.SaveChangesAsync();
 

@@ -26,7 +26,7 @@ namespace Hera.Services.Businesses
         {
             var userEntity = new UserEntity
             {
-                UserName = userRegister.Email,
+                UserName = userRegister.UserName ?? userRegister.Email,
                 FirstName = userRegister.FirstName,
                 LastName = userRegister.LastName,
                 //Age = userRegister.Age,
@@ -86,12 +86,12 @@ namespace Hera.Services.Businesses
         {
             return userEntity == null ? null : new UserViewModel
             {
-                UserId = userEntity.Id,
+                Id = userEntity.Id,
                 UserName = userEntity.UserName,
                 FirstName = userEntity.FirstName,
                 LastName = userEntity.LastName,
                 Band = userEntity.Band,
-                Telephone = userEntity.PhoneNumber,
+                PhoneNumber = userEntity.PhoneNumber,
                 Email = userEntity.Email,
                 Onboarding = userEntity.Onboarding,
                 ProfilePicture = userEntity.ProfilePicture
@@ -102,13 +102,13 @@ namespace Hera.Services.Businesses
         {
             return new UserEntity
             {
-                Id = model.UserId,
+                Id = model.Id,
                 UserName = model.UserName,
                 Band = model.Band,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Email = model.Email,
-                PhoneNumber = model.Telephone,
+                PhoneNumber = model.PhoneNumber,
                 ProfilePicture = model.ProfilePicture,
                 Onboarding = model.Onboarding
             };
