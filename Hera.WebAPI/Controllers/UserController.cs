@@ -20,12 +20,15 @@ namespace Hera.WebAPI.Controllers
     public class UserController: HeraBaseController
     {
         private readonly IUserService _userService;
+        private readonly IHeraSecurity _heraSecurity;
         public UserController(
             IHttpContextAccessor httpContextAccessor,
             ILogger logger,
+            IHeraSecurity heraSecurity,
             IUserService userService
         ) : base(httpContextAccessor)
         {
+            _heraSecurity = heraSecurity;
             _userService = userService;
         }
 
@@ -78,6 +81,22 @@ namespace Hera.WebAPI.Controllers
             await _userService.DeleteUser(id.ToString());
 
             return HeraOk();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUser([FromBody] UserRegisterViewModel model)
+        {
+            string hashedPassword = _heraSecurity.EncryptAes(model.Password);
+
+            model.Password = hashedPassword;
+            var errorMessage = await _userService.ValidateUserDefinedRules(model);
+            if (errorMessage != null)
+            {
+                return HeraBadRequest(errorMessage);
+            }
+            var newUser = await _userService.CreateUserAsync(model);
+
+            return HeraCreated(newUser);
         }
 
     }

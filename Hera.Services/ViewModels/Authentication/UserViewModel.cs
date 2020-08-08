@@ -18,5 +18,6 @@ namespace Hera.Services.ViewModels.Authentication
         public string Email { get; set; }
         public bool Onboarding { get; set; }
         public string ProfilePicture { get; set; }
+        public DateTime? Dob { get; set; }
     }
 }

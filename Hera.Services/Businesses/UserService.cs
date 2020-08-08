@@ -1,4 +1,5 @@
 ﻿
+using Hera.Common.Utils;
 using Hera.Data.Entities;
 using Hera.Data.Infrastructure;
 using Hera.Services.ViewModels.Authentication;
@@ -94,7 +95,8 @@ namespace Hera.Services.Businesses
                 PhoneNumber = userEntity.PhoneNumber,
                 Email = userEntity.Email,
                 Onboarding = userEntity.Onboarding,
-                ProfilePicture = userEntity.ProfilePicture
+                ProfilePicture = userEntity.ProfilePicture,
+                Dob = userEntity.DOB
             };
         }
 
@@ -110,7 +112,8 @@ namespace Hera.Services.Businesses
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 ProfilePicture = model.ProfilePicture,
-                Onboarding = model.Onboarding
+                Onboarding = model.Onboarding,
+                DOB = model.Dob
             };
         }
 
@@ -162,6 +165,10 @@ namespace Hera.Services.Businesses
 
         public async Task<string> ValidateUserDefinedRules(UserRegisterViewModel model)
         {
+            if (!Validation.IsValidEmail(model.Email))
+            {
+                return "Email is not valid format";
+            }
             var userWithSameEmail = await GetByEmail(model.Email);
             if (userWithSameEmail != null)
             {

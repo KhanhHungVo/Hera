@@ -109,6 +109,10 @@ namespace Hera.WebAPI.Controllers
             string hashedPassword = _heraSecurity.EncryptAes(model.Password);
 
             var tokenResult = await _authenticationService.SignIn(model.Username, hashedPassword);
+            //if (tokenResult is null)
+            //{
+            //    return HeraBadRequest();
+            //}
 
             return HeraOk(tokenResult);
         }

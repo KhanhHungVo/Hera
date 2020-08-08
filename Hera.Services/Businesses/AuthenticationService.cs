@@ -101,7 +101,7 @@ namespace Hera.Services.Businesses
                                              {
                                                  RefreshTokenExpiredTime = ut.RefreshTokenExpiredTime,
                                                  AccessTokenExpiredTime = ut.AccessTokenExpiredTime,
-                                                 UserId = ut.UserId,
+                                                 Id = ut.UserId,
                                                  IsActive = ut.IsActive,
                                                  User = ut.User,
                                              })
