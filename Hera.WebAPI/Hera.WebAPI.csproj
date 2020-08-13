@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hera.Common\Hera.Common.csproj" />
+    <ProjectReference Include="..\Hera.CryptoService\Hera.CryptoService.csproj" />
     <ProjectReference Include="..\Hera.Data\Hera.Data.csproj" />
     <ProjectReference Include="..\Hera.Services\Hera.Services.csproj" />
   </ItemGroup>

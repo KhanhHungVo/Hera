@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hera.WebAPI", "Hera.WebAPI\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hera.Common", "Hera.Common\Hera.Common.csproj", "{D923380F-7169-487C-AF06-738613686F12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hera.Data", "Hera.Data\Hera.Data.csproj", "{BAC5A4C0-39D7-4757-98AE-832BFF5D9415}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hera.Data", "Hera.Data\Hera.Data.csproj", "{BAC5A4C0-39D7-4757-98AE-832BFF5D9415}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hera.Services", "Hera.Services\Hera.Services.csproj", "{B10C60BD-8684-4196-B565-A61529EAA6D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hera.Services", "Hera.Services\Hera.Services.csproj", "{B10C60BD-8684-4196-B565-A61529EAA6D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hera.CryptoService", "Hera.CryptoService\Hera.CryptoService.csproj", "{F855EB53-6FCA-4BA2-BB77-F0E71700400E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{B10C60BD-8684-4196-B565-A61529EAA6D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B10C60BD-8684-4196-B565-A61529EAA6D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B10C60BD-8684-4196-B565-A61529EAA6D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F855EB53-6FCA-4BA2-BB77-F0E71700400E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F855EB53-6FCA-4BA2-BB77-F0E71700400E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F855EB53-6FCA-4BA2-BB77-F0E71700400E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F855EB53-6FCA-4BA2-BB77-F0E71700400E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
