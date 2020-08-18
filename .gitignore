@@ -486,3 +486,5 @@ MigrationBackup/
 **/appsettings.development.json
 **/appsettings.staging.json
 **/appsettings.production.json
+.vscode/launch.json
+.vscode/tasks.json
