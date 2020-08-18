@@ -30,5 +30,12 @@ namespace Hera.WebAPI.Controllers
             var result = await _cryptoService.makeAPICall();
             return HeraOk(result);
         }
+
+        [Route("top-coins")]
+        public async Task<IActionResult> GetTopCoins(int number)
+        {
+            var result = await _cryptoService.GetListCoinBasicInfo(number);
+            return HeraOk(result);
+        }
     }
 }

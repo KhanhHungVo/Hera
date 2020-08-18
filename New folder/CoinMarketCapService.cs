@@ -31,22 +31,17 @@ namespace Hera.CryptoService
         }
         public async Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int number)
         {
-            var rs = new List<CoinBasicInfo>();
-            var rqParams = new ListingLatestParameters()
-            {
-                Start = 1,
-                Limit = number,
-                Convert = "USD"
-            };
-            var listCoins = await SendApiRequest<List<CryptocurrencyWithLatestCode>>(rqParams, "cryptocurrency/listings/latest");
-            if (listCoins != null && !listCoins.Data.IsNullOrEmpty())
-            {
-                foreach(var item in listCoins.Data)
-                {
-                    rs.Add(MapToCoinBasicInfo(item));
-                }
-            }
-            return rs;
+            //var rqParams = new ListingLatestParameters() { 
+            //    Start=1,
+            //    Limit=number,
+            //    Convert="USD"
+            //};
+            //var listCoins = await SendApiRequest<List<CryptocurrencyWithLatestCode>>(rqParams, "cryptocurrency/listings/latest");
+            //if(listCoins != null && listCoins.Data.IsNullOrEmpty())
+            //{
+
+            //}
+            return null;
         }
 
         public async Task<Response<List<CryptocurrencyWithLatestCode>>> makeAPICall()
