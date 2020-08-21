@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <Folder Include="Core\Internal\" />
-    <Folder Include="Helper\" />
   </ItemGroup>
 
 </Project>

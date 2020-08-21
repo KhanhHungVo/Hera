@@ -14,7 +14,7 @@ using System.Web;
 
 namespace Hera.CryptoService
 {
-    public class CoinMarketCapService : ICryptoService
+    public class CoinMarketCapService : ICryptoService, BaseListService
     {
         public const string API_KEY = "b447a55c-e07c-4926-92e7-80ecc22aa461";
         public const string BASE_URL = "https://pro-api.coinmarketcap.com/v1/";
@@ -24,12 +24,17 @@ namespace Hera.CryptoService
             BaseAddress = new Uri(BASE_URL)
         };
 
-        public CoinMarketCapService()
+        public CoinMarketCapService():base()
         {
             HttpClient.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", API_KEY);
             HttpClient.DefaultRequestHeaders.Add("Accepts", "application/json");
         }
-        public async Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int number)
+        /// <summary>
+        /// get top n coins from coinmarketcap
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public async Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int number, string sortOrder = "")
         {
             var rs = new List<CoinBasicInfo>();
             var rqParams = new ListingLatestParameters()
@@ -46,6 +51,7 @@ namespace Hera.CryptoService
                     rs.Add(MapToCoinBasicInfo(item));
                 }
             }
+            rs = rs.OrderBy(x => x.PercentChange7D).ToList();
             return rs;
         }
 
@@ -65,8 +71,6 @@ namespace Hera.CryptoService
             client.Headers.Add("Accepts", "application/json");
             var content = await client.DownloadStringTaskAsync(URL.ToString());
             var result = JsonConvert.DeserializeObject<Response<List<CryptocurrencyWithLatestCode>>>(content);
-            
-            
             return result; 
         }
         private async Task<Response<T>> SendApiRequest<T>(object requestParams, string endpoint)
@@ -102,7 +106,22 @@ namespace Hera.CryptoService
             dto.Name = item.Name;
             dto.Symbol = item.Symbol;
             dto.CurrentPrice = item.Quote["USD"].Price;
+            dto.MarketCap = item.Quote["USD"].MarketCap;
+            dto.PercentChange24H = item.Quote["USD"].PercentChange24H;
+            dto.PercentChange7D = item.Quote["USD"].PercentChange7D;
             return dto;
+        }
+
+        protected override Dictionary<string, string> OrderByColumnMaps
+        {
+            get
+            {
+                return new Dictionary<string, string>()
+                {
+                    {"default","MarketCap"},
+                    {"PercentChange24H","PercentChange24H" }
+                };
+            }
         }
     }
 }

@@ -10,6 +10,6 @@ namespace Hera.CryptoService
     public interface ICryptoService
     {
         Task<Response<List<CryptocurrencyWithLatestCode>>> makeAPICall();
-        Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int number);
+        Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int number,string sortOrder="");
     }
 }
