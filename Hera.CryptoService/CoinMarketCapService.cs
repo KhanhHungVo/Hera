@@ -14,7 +14,7 @@ using System.Web;
 
 namespace Hera.CryptoService
 {
-    public class CoinMarketCapService : ICryptoService, BaseListService
+    public class CoinMarketCapService : ICryptoService
     {
         public const string API_KEY = "b447a55c-e07c-4926-92e7-80ecc22aa461";
         public const string BASE_URL = "https://pro-api.coinmarketcap.com/v1/";
@@ -112,16 +112,5 @@ namespace Hera.CryptoService
             return dto;
         }
 
-        protected override Dictionary<string, string> OrderByColumnMaps
-        {
-            get
-            {
-                return new Dictionary<string, string>()
-                {
-                    {"default","MarketCap"},
-                    {"PercentChange24H","PercentChange24H" }
-                };
-            }
-        }
     }
 }
