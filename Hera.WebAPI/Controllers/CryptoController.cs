@@ -32,9 +32,9 @@ namespace Hera.WebAPI.Controllers
         }
 
         [Route("top-coins")]
-        public async Task<IActionResult> GetTopCoins(int number)
+        public async Task<IActionResult> GetTopCoins(int number, string sortColumn= "PercentChange24H", string sortOrder="desc")
         {
-            var result = await _cryptoService.GetListCoinBasicInfo(number);
+            var result = await _cryptoService.GetListCoinBasicInfo(number, sortColumn, sortOrder);
             return HeraOk(result);
         }
     }

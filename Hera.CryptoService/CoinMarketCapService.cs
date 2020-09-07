@@ -1,4 +1,5 @@
-﻿using Hera.Common.Utils;
+﻿using Hera.Common.Helper;
+using Hera.Common.Utils;
 using Hera.CryptoService.Models.CoinMarketCap;
 using Hera.CryptoService.Models.CoinMarketCapModels;
 using Hera.CryptoService.Models.Crypto;
@@ -34,7 +35,7 @@ namespace Hera.CryptoService
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
-        public async Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int number, string sortOrder = "")
+        public async Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int number, string sortColumn = "", string sortOrder = "")
         {
             var rs = new List<CoinBasicInfo>();
             var rqParams = new ListingLatestParameters()
@@ -51,7 +52,7 @@ namespace Hera.CryptoService
                     rs.Add(MapToCoinBasicInfo(item));
                 }
             }
-            rs = rs.OrderBy(x => x.PercentChange7D).ToList();
+            rs = SortHelper<CoinBasicInfo>.SortBy(rs, sortColumn, sortOrder).ToList();
             return rs;
         }
 
