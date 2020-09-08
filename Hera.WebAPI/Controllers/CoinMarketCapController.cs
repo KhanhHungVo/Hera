@@ -10,31 +10,31 @@ using Microsoft.AspNetCore.Mvc;
 namespace Hera.WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class CryptoController : HeraBaseController
+    public class CoinMarketCapController : HeraBaseController
     {
-        private readonly ICryptoService _cryptoService;
+        private readonly ICoinMarketCapService _coinMarketCapService;
         //public CryptoController(ICryptoService cryptoService)
         //{
         //    _cryptoService = cryptoService;
         //}
 
-        public CryptoController(IHttpContextAccessor httpContextAccessor, ICryptoService cryptoService
+        public CoinMarketCapController(IHttpContextAccessor httpContextAccessor, ICoinMarketCapService cryptoService
             ) : base(httpContextAccessor)
         {
-            _cryptoService = cryptoService;
+            _coinMarketCapService = cryptoService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var result = await _cryptoService.makeAPICall();
+            var result = await _coinMarketCapService.makeAPICall();
             return HeraOk(result);
         }
 
-        [Route("top-coins")]
-        public async Task<IActionResult> GetTopCoins(int number, string sortColumn= "PercentChange24H", string sortOrder="desc")
+        [Route("list-coins")]
+        public async Task<IActionResult> GetListCoins(int start = 1, int limit = 50, string sortColumn= "MarketCap", string sortOrder="")
         {
-            var result = await _cryptoService.GetListCoinBasicInfo(number, sortColumn, sortOrder);
+            var result = await _coinMarketCapService.GetListCoinBasicInfo(start, limit, sortColumn, sortOrder);
             return HeraOk(result);
         }
     }

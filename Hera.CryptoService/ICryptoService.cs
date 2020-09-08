@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Hera.CryptoService
 {
-    public interface ICryptoService
+    public interface ICoinMarketCapService
     {
         Task<Response<List<CryptocurrencyWithLatestCode>>> makeAPICall();
-        Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int number, string sortColumn = "", string sortOrder="");
+        Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int start, int limit, string sortColumn , string sortOrder);
     }
 }

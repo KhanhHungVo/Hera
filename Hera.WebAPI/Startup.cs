@@ -55,7 +55,7 @@ namespace Hera.WebAPI
             services.AddScoped<ITopicCategoriesService, TopicCategoriesService>();
             services.AddScoped<ITopicsService, TopicsService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ICryptoService, CoinMarketCapService>();
+            services.AddScoped<ICoinMarketCapService, CoinMarketCapService>();
 
             services.AddTransient(typeof(IRepositoryBaseTypeId<,>), typeof(RepositoryBaseTypeId<,>));
             services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
