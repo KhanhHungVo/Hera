@@ -47,10 +47,14 @@ namespace Hera.CryptoService
             var listCoins = await SendApiRequest<List<CryptocurrencyWithLatestCode>>(rqParams, "cryptocurrency/listings/latest");
             if (listCoins != null && !listCoins.Data.IsNullOrEmpty())
             {
-                foreach(var item in listCoins.Data)
+                for(int i=0; i < listCoins.Data.Count; i++)
                 {
-                    rs.Add(MapToCoinBasicInfo(item));
+                    rs.Add(MapToCoinBasicInfo(listCoins.Data[i], start + i));
                 }
+                //foreach(var item in listCoins.Data)
+                //{
+                //    rs.Add(MapToCoinBasicInfo(item));
+                //}
             }
             rs = SortHelper<CoinBasicInfo>.SortBy(rs, sortColumn, sortOrder).ToList();
             return rs;
@@ -101,9 +105,10 @@ namespace Hera.CryptoService
 
             return string.Join(string.Empty, encodedValues);
         }
-        public CoinBasicInfo MapToCoinBasicInfo(CryptocurrencyWithLatestCode item)
+        public CoinBasicInfo MapToCoinBasicInfo(CryptocurrencyWithLatestCode item, int ranking = 0)
         {
             var dto = new CoinBasicInfo();
+            dto.MarketCapRanking = ranking;
             dto.Name = item.Name;
             dto.Symbol = item.Symbol;
             dto.CurrentPrice = item.Quote["USD"].Price;

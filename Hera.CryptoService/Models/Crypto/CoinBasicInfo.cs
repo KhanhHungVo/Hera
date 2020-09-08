@@ -6,6 +6,7 @@ namespace Hera.CryptoService.Models.Crypto
 {
     public class CoinBasicInfo
     {
+        public int MarketCapRanking { get; set; }
         public String Name { get; set; }
         public String Symbol { get; set; }
         public double? CurrentPrice { get; set; }
