@@ -37,5 +37,13 @@ namespace Hera.WebAPI.Controllers
             var result = await _coinMarketCapService.GetListCoinBasicInfo(start, limit, sortColumn, sortOrder);
             return HeraOk(result);
         }
+
+        [Route("coin")]
+        public async Task<IActionResult> GetCoinBasicInfo(string symbol)
+        {
+            var result = await _coinMarketCapService.GetCoinBasicInfo(symbol);
+            return HeraOk(result);
+        }
+
     }
 }

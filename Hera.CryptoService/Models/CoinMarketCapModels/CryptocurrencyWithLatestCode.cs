@@ -8,7 +8,7 @@ namespace Hera.CryptoService.Models.CoinMarketCap
     public class CryptocurrencyWithLatestCode
     {
         [JsonProperty("id")]
-        public long Id { get; set; }
+        public long? Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }

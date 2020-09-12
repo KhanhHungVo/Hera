@@ -11,5 +11,6 @@ namespace Hera.CryptoService
     {
         Task<Response<List<CryptocurrencyWithLatestCode>>> makeAPICall();
         Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int start, int limit, string sortColumn , string sortOrder);
+        Task<CoinBasicInfo> GetCoinBasicInfo(string symbol);
     }
 }

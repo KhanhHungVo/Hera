@@ -47,18 +47,26 @@ namespace Hera.CryptoService
             var listCoins = await SendApiRequest<List<CryptocurrencyWithLatestCode>>(rqParams, "cryptocurrency/listings/latest");
             if (listCoins != null && !listCoins.Data.IsNullOrEmpty())
             {
-                for(int i=0; i < listCoins.Data.Count; i++)
+                foreach (var item in listCoins.Data)
                 {
-                    rs.Add(MapToCoinBasicInfo(listCoins.Data[i], start + i));
+                    rs.Add(MapToCoinBasicInfo(item));
                 }
-                //foreach(var item in listCoins.Data)
-                //{
-                //    rs.Add(MapToCoinBasicInfo(item));
-                //}
             }
             rs = SortHelper<CoinBasicInfo>.SortBy(rs, sortColumn, sortOrder).ToList();
             return rs;
         }
+        public async Task<CoinBasicInfo> GetCoinBasicInfo(string symbol)
+        {
+            var rs = new CoinBasicInfo();
+            var rqParams = new CryptocurrencyWithLatestCode()
+            {
+                Symbol = symbol
+            };
+            var coin = await SendApiRequest<CryptocurrencyWithLatestCode>(rqParams, "cryptocurrency/quotes/latest");
+            rs = MapToCoinBasicInfo(coin.Data);
+            return rs;
+        }
+
 
         public async Task<Response<List<CryptocurrencyWithLatestCode>>> makeAPICall()
         {
@@ -105,10 +113,10 @@ namespace Hera.CryptoService
 
             return string.Join(string.Empty, encodedValues);
         }
-        public CoinBasicInfo MapToCoinBasicInfo(CryptocurrencyWithLatestCode item, int ranking = 0)
+        public CoinBasicInfo MapToCoinBasicInfo(CryptocurrencyWithLatestCode item)
         {
             var dto = new CoinBasicInfo();
-            dto.MarketCapRanking = ranking;
+            dto.MarketCapRanking = item.CmcRank??0;
             dto.Name = item.Name;
             dto.Symbol = item.Symbol;
             dto.CurrentPrice = item.Quote["USD"].Price;
