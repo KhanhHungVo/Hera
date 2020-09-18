@@ -62,8 +62,8 @@ namespace Hera.CryptoService
             {
                 Symbol = symbol
             };
-            var coin = await SendApiRequest<CryptocurrencyWithLatestCode>(rqParams, "cryptocurrency/quotes/latest");
-            rs = MapToCoinBasicInfo(coin.Data);
+            var coin = await SendApiRequest<Dictionary<string,CryptocurrencyWithLatestCode>>(rqParams, "cryptocurrency/quotes/latest");
+            rs = MapToCoinBasicInfo(coin.Data[symbol]);
             return rs;
         }
 
@@ -116,13 +116,15 @@ namespace Hera.CryptoService
         public CoinBasicInfo MapToCoinBasicInfo(CryptocurrencyWithLatestCode item)
         {
             var dto = new CoinBasicInfo();
-            dto.MarketCapRanking = item.CmcRank??0;
+            dto.MarketCapRanking = item.CmcRank;
             dto.Name = item.Name;
             dto.Symbol = item.Symbol;
             dto.CurrentPrice = item.Quote["USD"].Price;
             dto.MarketCap = item.Quote["USD"].MarketCap;
             dto.PercentChange24H = item.Quote["USD"].PercentChange24H;
             dto.PercentChange7D = item.Quote["USD"].PercentChange7D;
+            dto.MaxSupply = item.MaxSupply;
+            dto.TotalSupply = item.TotalSupply;
             return dto;
         }
 
