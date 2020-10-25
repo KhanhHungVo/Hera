@@ -9,7 +9,7 @@ namespace Hera.CryptoService
 {
     public interface ICoinMarketCapService
     {
-        Task<Response<List<CryptocurrencyWithLatestCode>>> makeAPICall();
+        Task<Response<List<ListingLatestDataRs>>> makeAPICall();
         Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int start, int limit, string sortColumn , string sortOrder);
         Task<CoinBasicInfo> GetCoinBasicInfo(string symbol);
     }
