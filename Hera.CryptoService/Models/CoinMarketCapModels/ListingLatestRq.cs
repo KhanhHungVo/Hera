@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Hera.CryptoService.Models.CoinMarketCapModels
 {
-    public class ListingLatestParameters
+    public class ListingLatestRq
     {
         [JsonProperty("start")]
         public int? Start { get; set; }

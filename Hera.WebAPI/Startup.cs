@@ -2,6 +2,7 @@ using Hera.Common.Core;
 using Hera.Common.Data;
 using Hera.Common.Extensions;
 using Hera.CryptoService;
+using Hera.CryptoService.Services.CoinMarketCapServices;
 using Hera.Data.Infrastructure;
 using Hera.Data.Repositories;
 using Hera.Services;
@@ -56,6 +57,7 @@ namespace Hera.WebAPI
             services.AddScoped<ITopicsService, TopicsService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICoinMarketCapService, CoinMarketCapService>();
+            services.AddScoped<ListingLatestCMCService, ListingLatestCMCService>();
 
             services.AddTransient(typeof(IRepositoryBaseTypeId<,>), typeof(RepositoryBaseTypeId<,>));
             services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));

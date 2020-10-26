@@ -35,16 +35,16 @@ namespace Hera.CryptoService
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
-        public async Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int start, int limit, string sortColumn, string sortOrder = "")
+        public virtual async Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int start, int limit, string sortColumn, string sortOrder = "")
         {
             var rs = new List<CoinBasicInfo>();
-            var rqParams = new ListingLatestParameters()
+            var rqParams = new ListingLatestRq()
             {
                 Start = start,
                 Limit = limit,
                 Convert = "USD"
             };
-            var listCoins = await SendApiRequest<List<CryptocurrencyWithLatestCode>>(rqParams, "cryptocurrency/listings/latest");
+            var listCoins = await SendApiRequest<List<ListingLatestDataRs>>(rqParams, "cryptocurrency/listings/latest");
             if (listCoins != null && !listCoins.Data.IsNullOrEmpty())
             {
                 foreach (var item in listCoins.Data)
@@ -58,17 +58,17 @@ namespace Hera.CryptoService
         public async Task<CoinBasicInfo> GetCoinBasicInfo(string symbol)
         {
             var rs = new CoinBasicInfo();
-            var rqParams = new CryptocurrencyWithLatestCode()
+            var rqParams = new ListingLatestDataRs()
             {
                 Symbol = symbol
             };
-            var coin = await SendApiRequest<Dictionary<string,CryptocurrencyWithLatestCode>>(rqParams, "cryptocurrency/quotes/latest");
-            rs = MapToCoinBasicInfo(coin.Data[symbol]);
+            var coin = await SendApiRequest<Dictionary<string,QuoteLatestDataRs>>(rqParams, "cryptocurrency/quotes/latest");
+            rs = MapToCoinBasicInfo(coin.Data);
             return rs;
         }
 
 
-        public async Task<Response<List<CryptocurrencyWithLatestCode>>> makeAPICall()
+        public async Task<Response<List<ListingLatestDataRs>>> makeAPICall()
         {
             var URL = new UriBuilder($"{BASE_URL}/v1/cryptocurrency/listings/latest");
 
@@ -83,10 +83,10 @@ namespace Hera.CryptoService
             client.Headers.Add("X-CMC_PRO_API_KEY", API_KEY);
             client.Headers.Add("Accepts", "application/json");
             var content = await client.DownloadStringTaskAsync(URL.ToString());
-            var result = JsonConvert.DeserializeObject<Response<List<CryptocurrencyWithLatestCode>>>(content);
+            var result = JsonConvert.DeserializeObject<Response<List<ListingLatestDataRs>>>(content);
             return result; 
         }
-        private async Task<Response<T>> SendApiRequest<T>(object requestParams, string endpoint)
+        public async Task<Response<T>> SendApiRequest<T>(object requestParams, string endpoint)
         {
             var queryParams = ConvertToQueryParams(requestParams);
             var endpointWithParams = $"{endpoint}{queryParams}";
@@ -97,7 +97,7 @@ namespace Hera.CryptoService
             return JsonConvert.DeserializeObject<Response<T>>(content);
         }
 
-        private static string ConvertToQueryParams(object parameters)
+        public static string ConvertToQueryParams(object parameters)
         {
             var properties = parameters.GetType().GetRuntimeProperties();
             var encodedValues = properties
@@ -113,7 +113,7 @@ namespace Hera.CryptoService
 
             return string.Join(string.Empty, encodedValues);
         }
-        public CoinBasicInfo MapToCoinBasicInfo(CryptocurrencyWithLatestCode item)
+        public CoinBasicInfo MapToCoinBasicInfo(ListingLatestDataRs item)
         {
             var dto = new CoinBasicInfo();
             dto.MarketCapRanking = item.CmcRank;
@@ -125,9 +125,22 @@ namespace Hera.CryptoService
             dto.PercentChange7D = item.Quote["USD"].PercentChange7D;
             dto.MaxSupply = item.MaxSupply;
             dto.TotalSupply = item.TotalSupply;
+            dto.CirculatingSupply = item.CirculatingSupply;
             dto.Volume24h = item.Quote["USD"]?.Volume24H;
             dto.CirculatingSupply = item.CirculatingSupply;
-
+            return dto;
+        }
+        public CoinBasicInfo MapToCoinBasicInfo(Dictionary<string,QuoteLatestDataRs> dict)
+        {
+            var item = dict.First().Value;
+            var dto = new CoinBasicInfo();
+            dto.MarketCapRanking = item.cmc_rank ;
+            dto.Name = item.name;
+            dto.Symbol = item.symbol;
+            dto.CurrentPrice = item.Quote["USD"].Price;
+            dto.MarketCap = item.Quote["USD"].MarketCap;
+            dto.PercentChange24H = item.Quote["USD"].PercentChange24H;
+            dto.PercentChange7D = item.Quote["USD"].PercentChange7D;
             return dto;
         }
 

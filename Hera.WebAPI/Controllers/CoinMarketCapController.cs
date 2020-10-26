@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hera.Common.WebAPI;
 using Hera.CryptoService;
+using Hera.CryptoService.Services.CoinMarketCapServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +14,6 @@ namespace Hera.WebAPI.Controllers
     public class CoinMarketCapController : HeraBaseController
     {
         private readonly ICoinMarketCapService _coinMarketCapService;
-        //public CryptoController(ICryptoService cryptoService)
-        //{
-        //    _cryptoService = cryptoService;
-        //}
 
         public CoinMarketCapController(IHttpContextAccessor httpContextAccessor, ICoinMarketCapService cryptoService
             ) : base(httpContextAccessor)
@@ -32,9 +29,10 @@ namespace Hera.WebAPI.Controllers
         }
 
         [Route("list-coins")]
-        public async Task<IActionResult> GetListCoins(int start = 1, int limit = 50, string sortColumn= "MarketCap", string sortOrder="")
+        public async Task<IActionResult> GetListCoins([FromServices] ListingLatestCMCService listingLatestCMCService, int start = 1, int limit = 50, string sortColumn= "MarketCap", string sortOrder="")
         {
             var result = await _coinMarketCapService.GetListCoinBasicInfo(start, limit, sortColumn, sortOrder);
+            //var result = await listingLatestCMCService.GetListCoinBasicInfo(start, limit, sortColumn, sortOrder);
             return HeraOk(result);
         }
 
