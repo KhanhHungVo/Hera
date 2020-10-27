@@ -1,11 +1,10 @@
-﻿using Hera.Data.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Hera.Data.Entities
+namespace Hera.Services.ViewModels.Order
 {
-    public class Order : EntityBase
+    public class OrderViewModel
     {
         DateTime OrderDate { get; set; }
         string Name { get; set; }
@@ -18,6 +17,5 @@ namespace Hera.Data.Entities
         double MarketPrice { get; set; }
         double GainLossPercentage { get; set; }
         double GainLoss { get; set; }
-        
     }
 }
