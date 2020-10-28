@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Hera.Data.Infrastructure
 {
-    public class RepositoryBase<T> : RepositoryBaseTypeId<T, long>, IRepositoryBase<T> where T : class, IEntityTypeId<long>
+    public class RepositoryBase<T> : RepositoryBaseTypeId<T, int>, IRepositoryBase<T> where T : class, IEntityTypeId<int>
     {
         public RepositoryBase(HeraDbContext context) : base(context)
         {

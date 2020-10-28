@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Hera.Services
 {
-    public interface IServiceBase<T> : IServiceBaseTypeId<T, long> where T : class, IEntityTypeId<long>
+    public interface IServiceBase<T> : IServiceBaseTypeId<T, int> where T : class, IEntityTypeId<int>
     {
     }
 }
