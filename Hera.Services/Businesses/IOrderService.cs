@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Hera.Services.Businesses
 {
-    interface IOrderService
+    public interface IOrderService
     {
         Task<OrderViewModel> Create(OrderViewModel model);
         Task<OrderViewModel> Update(OrderViewModel mdoel);
         Task<IEnumerable<OrderViewModel>> GetAll();
+        Task<OrderViewModel> GetById(int id);
         Task Delete(int id);
     }
 }

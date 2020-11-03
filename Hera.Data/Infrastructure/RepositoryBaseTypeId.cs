@@ -21,8 +21,6 @@ namespace Hera.Data.Infrastructure
             DbSet = dbContext.Set<T>();
         }
 
-
-
         public void Add(T entity)
         {
             DbSet.Add(entity);
@@ -36,6 +34,30 @@ namespace Hera.Data.Infrastructure
         public void AddRange(IEnumerable<T> entities)
         {
             DbSet.AddRange(entities);
+        }
+
+        public async Task<T> CreateAsync(T entity)
+        {
+            DbSet.Add(entity);
+            await Context.SaveChangesAsync();
+            return entity;
+        }
+
+        public async Task<T> GetById(TId id)
+        {
+            return await DbSet.FindAsync(id);
+        }
+
+        public async Task<List<T>> GetAll()
+        {
+            return await DbSet.ToListAsync();
+        }
+
+        public async Task<T> Update(T entity)
+        {
+            Context.Entry(entity).State = EntityState.Modified;
+            await Context.SaveChangesAsync();
+            return entity;
         }
 
         public IDbContextTransaction BeginTransaction()

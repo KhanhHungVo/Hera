@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Hera.Services.ViewModels.Order
 {
     public class OrderViewModel
     {
-        DateTime OrderDate { get; set; }
-        string Name { get; set; }
-        string Symbol { get; set; }
-        int Volume { get; set; }
+        public int Id { get; set; }
+        public DateTime OrderDate { get; set; }
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string Symbol { get; set; }
+        [Required]
+        public int Volume { get; set; }
         string Reason { get; set; }
-        double Invesment { get; set; }
-        double Cost { get; set; }
-        double CurrentPrice { get; set; }
-        double MarketPrice { get; set; }
-        double GainLossPercentage { get; set; }
-        double GainLoss { get; set; }
+        [Required]
+        public double Invesment { get; set; }
+        public double Cost { get; set; }
+        public double CurrentPrice { get; set; }
+        public double MarketPrice { get; set; }
+        public double GainLossPercentage { get; set; }
+        public double GainLoss { get; set; }
     }
 }

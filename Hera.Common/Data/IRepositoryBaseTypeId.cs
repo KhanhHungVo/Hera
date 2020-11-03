@@ -33,5 +33,14 @@ namespace Hera.Common.Data
         Task SaveChangesAsync();
 
         void Delete(T entity);
+
+
+        public Task<T> CreateAsync(T entity);
+
+        public Task<T> GetById(TId id);
+
+        public Task<List<T>> GetAll();
+
+        public Task<T> Update(T entity);
     }
 }
