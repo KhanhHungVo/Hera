@@ -21,6 +21,8 @@ namespace Hera.Data.Infrastructure
             DbSet = dbContext.Set<T>();
         }
 
+
+
         public void Add(T entity)
         {
             DbSet.Add(entity);

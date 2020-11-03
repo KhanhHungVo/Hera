@@ -1,11 +1,12 @@
-﻿using Hera.Data.Infrastructure;
+﻿using Hera.Common.Data;
+using Hera.Data.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Hera.Data.Entities
 {
-    public class OrderEntity : EntityBase
+    public class OrderEntity : EntityBaseTypeId<int>
     {
         DateTime OrderDate { get; set; }
         string Name { get; set; }

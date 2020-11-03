@@ -27,13 +27,13 @@ namespace Hera.Data.Entities
 
         public ICollection<TopicsUserInterestEntity> TopicsUserInterest { get; set; }
 
-        public TopicEntity(int id)
+        public TopicEntity(long id)
         {
             Id = id;
         }
     }
 
-    public class TopicEntityBuilder : HeraBaseCustomModelBinder<TopicEntity, int>, IHeraCustomModelBinder
+    public class TopicEntityBuilder : HeraBaseCustomModelBinder<TopicEntity, long>, IHeraCustomModelBinder
     {
         public override void Build(ModelBuilder binder)
         {

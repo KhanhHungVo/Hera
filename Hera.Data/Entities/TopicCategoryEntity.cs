@@ -25,7 +25,7 @@ namespace Hera.Data.Entities
         public ICollection<TopicEntity> Topics { get; set; }
     }
 
-    public class TopicCategoryEntityBuilder : HeraBaseCustomModelBinder<TopicCategoryEntity, int>, IHeraCustomModelBinder
+    public class TopicCategoryEntityBuilder : HeraBaseCustomModelBinder<TopicCategoryEntity, long>, IHeraCustomModelBinder
     {
         public override void Build(ModelBuilder binder)
         {
