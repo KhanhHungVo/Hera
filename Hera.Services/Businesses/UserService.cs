@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper;
 using Hera.Common.Utils;
 using Hera.Data.Entities;
 using Hera.Data.Infrastructure;
@@ -17,10 +18,12 @@ namespace Hera.Services.Businesses
     {
         private readonly ILogger _logger;
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository, ILogger logger) : base(userRepository)
+        private readonly IMapper _mapper;
+        public UserService(IUserRepository userRepository, ILogger logger, IMapper mapper) : base(userRepository)
         {
             _logger = logger;
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public async Task<UserViewModel> CreateUserAsync(UserRegisterViewModel userRegister)
@@ -40,8 +43,7 @@ namespace Hera.Services.Businesses
 
             _userRepository.Add(userEntity);
             await _userRepository.SaveChangesAsync();
-
-            return MapToViewModel(userEntity);
+            return _mapper.Map<UserViewModel>(userEntity); ;
         }
 
         public async Task DeleteUser(string id)

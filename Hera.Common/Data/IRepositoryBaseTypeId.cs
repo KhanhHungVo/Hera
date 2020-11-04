@@ -34,7 +34,7 @@ namespace Hera.Common.Data
 
         void Delete(T entity);
 
-
+        public Task<T> DeleteAsync(TId id);
         public Task<T> CreateAsync(T entity);
 
         public Task<T> GetById(TId id);

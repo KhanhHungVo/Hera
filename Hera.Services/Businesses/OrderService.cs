@@ -1,4 +1,5 @@
-﻿using Hera.Data.Entities;
+﻿using AutoMapper;
+using Hera.Data.Entities;
 using Hera.Data.Infrastructure;
 using Hera.Services.ViewModels.Order;
 using System;
@@ -8,36 +9,42 @@ using System.Threading.Tasks;
 
 namespace Hera.Services.Businesses
 {
-    public class OrderService : IOrderService
+    public class OrderService : ServiceBaseTypeId<OrderEntity, int>,IOrderService
     {
-        private readonly IOrderRepository orderRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IMapper _mapper;
+        public OrderService(IOrderRepository orderRepository, IMapper mapper) : base(orderRepository)
+        {
+            _orderRepository = orderRepository;
+            _mapper = mapper;
+        }
         public async Task<OrderViewModel> Create(OrderViewModel model)
         {
-            var entity = MapToFromViewModel(model);
-            return MapToViewModel(await orderRepository.CreateAsync(entity));
+            var entity = _mapper.Map<OrderEntity>(model);
+            return _mapper.Map<OrderViewModel>(await _orderRepository.CreateAsync(entity));
         }
 
-        public Task Delete(int id)
+        public async Task<OrderViewModel> Delete(int id)
         {
-            throw new NotImplementedException();
+            return _mapper.Map<OrderViewModel>(await _orderRepository.DeleteAsync(id)); 
         }
 
         public async Task<IEnumerable<OrderViewModel>> GetAll()
         {
-            List<OrderEntity> oders =  await orderRepository.GetAll();
-            return oders.ConvertAll(x => MapToViewModel(x));
+            List<OrderEntity> oders =  await _orderRepository.GetAll();
+            return oders.ConvertAll(x => _mapper.Map<OrderViewModel>(x));
         }
 
         public async Task<OrderViewModel> GetById(int id)
         {
-            OrderEntity entity = await orderRepository.GetById(id);
-            return MapToViewModel(entity);
+            OrderEntity entity = await _orderRepository.GetById(id);
+            return _mapper.Map<OrderViewModel>(entity);
         }
 
         public async Task<OrderViewModel> Update(OrderViewModel model)
         {
-            var entity = MapToFromViewModel(model);
-            return  MapToViewModel(await orderRepository.Update(entity));
+            var entity = _mapper.Map<OrderEntity>(model);
+            return _mapper.Map<OrderViewModel>(await _orderRepository.Update(entity));
         }
         public OrderEntity MapToFromViewModel(OrderViewModel model)
         {

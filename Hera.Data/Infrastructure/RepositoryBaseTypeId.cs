@@ -53,6 +53,18 @@ namespace Hera.Data.Infrastructure
             return await DbSet.ToListAsync();
         }
 
+        public async Task<T> DeleteAsync(TId id)
+        {
+            var entity = await DbSet.FindAsync(id);
+            if(entity == null)
+            {
+                return entity;
+            }
+            DbSet.Remove(entity);
+            await Context.SaveChangesAsync();
+            return entity;
+        }
+
         public async Task<T> Update(T entity)
         {
             Context.Entry(entity).State = EntityState.Modified;
