@@ -17,16 +17,29 @@ namespace Hera.WebAPI.Controllers
         {
             _orderService = orderService;
         }
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody]OrderViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return HeraBadRequest();
-            }
             return HeraOk(await _orderService.CreateAsync(model));
         }
 
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] OrderViewModel model)
+        {
+            return HeraOk(await _orderService.UpdateAsync(model));
+        }
+        
+        public async Task<IActionResult> Get(int id)
+        {
+            return HeraOk(await _orderService.GetAsync(id));
+        }
 
-      
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            return HeraOk(await _orderService.DeleteAsync(id));
+        }
+
+
     }
 }

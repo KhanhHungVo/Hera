@@ -11,7 +11,7 @@ namespace Hera.Services.Businesses
     public interface IOrderService : IServiceBaseTypeId<OrderEntity, int>
     {
         Task<OrderViewModel> CreateAsync(OrderViewModel model);
-        Task<OrderViewModel> UpdateAsync(OrderViewModel mdoel);
+        Task<OrderViewModel> UpdateAsync(OrderViewModel model);
         Task<IEnumerable<OrderViewModel>> GetAsync();
         Task<OrderViewModel> GetAsync(int id);
         Task<OrderViewModel> DeleteAsync(int id);
