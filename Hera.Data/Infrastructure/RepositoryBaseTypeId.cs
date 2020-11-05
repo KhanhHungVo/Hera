@@ -43,12 +43,12 @@ namespace Hera.Data.Infrastructure
             return entity;
         }
 
-        public async Task<T> GetById(TId id)
+        public async Task<T> GetAsync(TId id)
         {
             return await DbSet.FindAsync(id);
         }
 
-        public async Task<List<T>> GetAll()
+        public async Task<List<T>> GetAsync()
         {
             return await DbSet.ToListAsync();
         }
@@ -56,7 +56,7 @@ namespace Hera.Data.Infrastructure
         public async Task<T> DeleteAsync(TId id)
         {
             var entity = await DbSet.FindAsync(id);
-            if(entity == null)
+            if (entity == null)
             {
                 return entity;
             }
@@ -65,7 +65,7 @@ namespace Hera.Data.Infrastructure
             return entity;
         }
 
-        public async Task<T> Update(T entity)
+        public async virtual Task<T> UpdateAsync(T entity)
         {
             Context.Entry(entity).State = EntityState.Modified;
             await Context.SaveChangesAsync();

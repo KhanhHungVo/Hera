@@ -53,7 +53,7 @@ namespace Hera.WebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserAsync(int id)
         {
-            var user = await _userService.GetById(id.ToString());
+            var user = await _userService.GetAsync(id.ToString());
             return HeraOk(user);
         }
 
@@ -71,7 +71,7 @@ namespace Hera.WebAPI.Controllers
             {
                 return HeraBadRequest();
             }
-            await _userService.UpdateUser(model);
+            await _userService.UpdateAsync(model);
             return HeraCreated(model);
         }
 
@@ -94,7 +94,7 @@ namespace Hera.WebAPI.Controllers
             {
                 return HeraBadRequest(errorMessage);
             }
-            var newUser = await _userService.CreateUserAsync(model);
+            var newUser = await _userService.CreateAsync(model);
 
             return HeraCreated(newUser);
         }

@@ -10,11 +10,11 @@ namespace Hera.Services.Businesses
 {
     public interface IOrderService : IServiceBaseTypeId<OrderEntity, int>
     {
-        //Task<OrderViewModel> Create(OrderViewModel model);
-        //Task<OrderViewModel> Update(OrderViewModel mdoel);
-        //Task<IEnumerable<OrderViewModel>> GetAll();
-        //Task<OrderViewModel> GetById(int id);
-        //Task<OrderViewModel> DeleteAsync(int id);
-        //Task Delete(int id);
+        Task<OrderViewModel> CreateAsync(OrderViewModel model);
+        Task<OrderViewModel> UpdateAsync(OrderViewModel mdoel);
+        Task<IEnumerable<OrderViewModel>> GetAsync();
+        Task<OrderViewModel> GetAsync(int id);
+        Task<OrderViewModel> DeleteAsync(int id);
+       //Task Delete(int id);
     }
 }

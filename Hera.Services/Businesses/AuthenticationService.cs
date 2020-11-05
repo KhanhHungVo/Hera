@@ -41,7 +41,7 @@ namespace Hera.Services.Businesses
 
         public async Task<UserViewModel> Register(UserRegisterViewModel userRegister)
         {
-            return await _userService.CreateUserAsync(userRegister);
+            return await _userService.CreateAsync(userRegister);
         }
 
         public async Task<string> ValidateUserDefinedRules(UserRegisterViewModel userRegister)

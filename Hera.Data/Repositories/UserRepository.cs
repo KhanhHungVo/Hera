@@ -12,7 +12,7 @@ namespace Hera.Data.Repositories
 
         }
 
-        public async Task<UserEntity> UpdateAsync(UserEntity entity)
+        public async override Task<UserEntity> UpdateAsync(UserEntity entity)
         {
             //DbSet.Update(entity);
             

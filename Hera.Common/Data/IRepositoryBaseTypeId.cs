@@ -37,10 +37,10 @@ namespace Hera.Common.Data
         public Task<T> DeleteAsync(TId id);
         public Task<T> CreateAsync(T entity);
 
-        public Task<T> GetById(TId id);
+        public Task<T> GetAsync(TId id);
 
-        public Task<List<T>> GetAll();
+        public Task<List<T>> GetAsync();
 
-        public Task<T> Update(T entity);
+        public Task<T> UpdateAsync(T entity);
     }
 }

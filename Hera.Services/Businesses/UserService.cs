@@ -26,7 +26,7 @@ namespace Hera.Services.Businesses
             _mapper = mapper;
         }
 
-        public async Task<UserViewModel> CreateUserAsync(UserRegisterViewModel userRegister)
+        public async Task<UserViewModel> CreateAsync(UserRegisterViewModel userRegister)
         {
             var userEntity = new UserEntity
             {
@@ -61,7 +61,7 @@ namespace Hera.Services.Businesses
             return users.Select(MapToViewModel).ToList();
         }
 
-        public async Task<UserViewModel> GetById(string id)
+        public async Task<UserViewModel> GetAsync(string id)
         {
             var user = await _userRepository.QueryAsNoTracking()
                                    .Where(u => u.Id == id).FirstOrDefaultAsync();
@@ -78,7 +78,7 @@ namespace Hera.Services.Businesses
             return MapToViewModel(userEntity);
         }
 
-        public async Task<UserViewModel> UpdateUser(UserViewModel model)
+        public async Task<UserViewModel> UpdateAsync(UserViewModel model)
         {
             var userEntity = MapFromViewModel(model);
             await _userRepository.UpdateAsync(userEntity);
@@ -151,7 +151,7 @@ namespace Hera.Services.Businesses
             } else
             {
                 user.ProfilePicture = socialUser.ProfilePicture;
-                await UpdateUser(user);
+                await UpdateAsync(user);
             }
             return user;
         }

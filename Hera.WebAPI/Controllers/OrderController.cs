@@ -23,7 +23,7 @@ namespace Hera.WebAPI.Controllers
             {
                 return HeraBadRequest();
             }
-            return HeraOk(await _orderService.Create(model));
+            return HeraOk(await _orderService.CreateAsync(model));
         }
 
 
