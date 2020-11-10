@@ -23,6 +23,7 @@ namespace Hera.Data.Infrastructure
         }
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<TopicEntity> Topics { get; set; }
+        public DbSet<TopicEntity> Orders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

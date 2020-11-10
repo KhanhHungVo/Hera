@@ -4,6 +4,7 @@ using Hera.Common.WebAPI;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -129,6 +130,19 @@ namespace Hera.Common.Extensions
                         new List<string>()
                     }
                 });
+            });
+        }
+
+        public static void AddHeraDatabase(this IServiceCollection services, IWebHostEnvironment env, IConfiguration config, DbContext dbContext)
+        {
+            services.AddEntityFrameworkNpgsql().AddDbContext<dbContext>(opt =>
+            {
+                opt.UseNpgsql(config.GetConnectionString(HeraConstants.CONNECTION_STRINGS__POSTGRES_SQL_CONNECTION));
+
+                if (env.IsDevelopment())
+                {
+                    opt.EnableSensitiveDataLogging();
+                }
             });
         }
     }
