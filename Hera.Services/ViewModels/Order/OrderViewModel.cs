@@ -18,6 +18,7 @@ namespace Hera.Services.ViewModels.Order
         string Reason { get; set; }
         [Required]
         public double Invesment { get; set; }
+        [Required]
         public double Cost { get; set; }
         public double CurrentPrice { get; set; }
         public double MarketPrice { get; set; }

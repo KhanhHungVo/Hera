@@ -60,11 +60,14 @@ namespace Hera.WebAPI
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICoinMarketCapService, CoinMarketCapService>();
             services.AddScoped<ListingLatestCMCService, ListingLatestCMCService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             services.AddTransient(typeof(IRepositoryBaseTypeId<,>), typeof(RepositoryBaseTypeId<,>));
             services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITopicsRepository, TopicsRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+
 
             services.AddCors();
         }

@@ -51,7 +51,7 @@ namespace Hera.Services.Businesses
 
         public async Task<JwtTokenViewModel> SignIn(string userName, string hashedPassword)
         {
-            var user = await _userService.GetByLoginAsync(userName, hashedPassword);
+             var user = await _userService.GetByLoginAsync(userName, hashedPassword);
             if (user == null)
             {
                 return null;

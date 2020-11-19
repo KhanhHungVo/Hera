@@ -133,9 +133,9 @@ namespace Hera.Common.Extensions
             });
         }
 
-        public static void AddHeraDatabase(this IServiceCollection services, IWebHostEnvironment env, IConfiguration config, DbContext dbContext)
+        public static void AddHeraDatabase(this IServiceCollection services, IWebHostEnvironment env, IConfiguration config)
         {
-            services.AddEntityFrameworkNpgsql().AddDbContext<dbContext>(opt =>
+            services.AddEntityFrameworkNpgsql().AddDbContext<DbContext>(opt =>
             {
                 opt.UseNpgsql(config.GetConnectionString(HeraConstants.CONNECTION_STRINGS__POSTGRES_SQL_CONNECTION));
 

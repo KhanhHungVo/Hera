@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Hera.Data.Repositories
 {
-    public class OrderRepository : RepositoryBaseTypeId<OrderEntity,int>
+    public class OrderRepository : RepositoryBaseTypeId<OrderEntity,int>, IOrderRepository
     {
         public OrderRepository(HeraDbContext context): base(context)
         {

@@ -71,7 +71,7 @@ namespace Hera.Services.Businesses
         public async Task<UserViewModel> GetByLoginAsync(string username, string hashedPassword)
         {
             var query = _userRepository.QueryAsNoTracking()
-                                   .Where(u => username.Equals(u.UserName) &&
+                                   .Where(u => (username.Equals(u.UserName) || username.Equals(u.Email)) &&
                                                hashedPassword.Equals(u.HashedPassword));
             var userEntity = await query.FirstOrDefaultAsync();
 
