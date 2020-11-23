@@ -7,6 +7,7 @@ using Hera.CryptoService.Services.CoinMarketCapServices;
 using Hera.Data.Infrastructure;
 using Hera.Data.Repositories;
 using Hera.Services;
+using Hera.Services.AutoMapperMapping;
 using Hera.Services.Businesses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,6 +37,12 @@ namespace Hera.WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
             services.AddControllers();
             services.AddHeraSecurityAsSingleton();
             services.AddHeraAuthentication(Configuration);

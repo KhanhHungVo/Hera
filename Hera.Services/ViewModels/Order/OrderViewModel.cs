@@ -13,16 +13,16 @@ namespace Hera.Services.ViewModels.Order
         public string Name { get; set; }
         [Required]
         public string Symbol { get; set; }
-        [Required]
         public int Volume { get; set; }
         string Reason { get; set; }
         [Required]
-        public double Invesment { get; set; }
+        public double InvesmentValue { get; set; }
         [Required]
         public double Cost { get; set; }
         public double CurrentPrice { get; set; }
-        public double MarketPrice { get; set; }
+        public double MarketValue { get; set; }
         public double GainLossPercentage { get; set; }
         public double GainLoss { get; set; }
+        public Boolean Status { get; set; }
     }
 }
