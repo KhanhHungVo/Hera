@@ -1,5 +1,5 @@
 ﻿using Hera.Data.Entities;
-using Hera.Services.ViewModels.TopicCategories;
+using Hera.Common.ViewModels.TopicCategories;
 using System;
 using System.Collections.Generic;
 using System.Text;

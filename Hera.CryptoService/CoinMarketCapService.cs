@@ -141,6 +141,10 @@ namespace Hera.CryptoService
             dto.MarketCap = item.Quote["USD"].MarketCap;
             dto.PercentChange24H = item.Quote["USD"].PercentChange24H;
             dto.PercentChange7D = item.Quote["USD"].PercentChange7D;
+            dto.MaxSupply = item.max_supply;
+            dto.TotalSupply = item.total_supply;
+            dto.CirculatingSupply = item.circulating_supply;
+            dto.Volume24h = item.Quote["USD"]?.Volume24H;
             return dto;
         }
 

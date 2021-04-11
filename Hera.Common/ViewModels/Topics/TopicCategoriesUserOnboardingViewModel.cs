@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Hera.Services.ViewModels.Topics
+namespace Hera.Common.ViewModels.Topics
 {
     public class TopicCategoriesUserOnboardingViewModel
     {

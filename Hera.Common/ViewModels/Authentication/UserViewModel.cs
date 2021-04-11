@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace Hera.Services.ViewModels.Authentication
+namespace Hera.Common.ViewModels.Authentication
 {
     public class UserViewModel
     {

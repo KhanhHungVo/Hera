@@ -67,7 +67,7 @@ namespace Hera.Data.Infrastructure
 
         public async virtual Task<T> UpdateAsync(T entity)
         {
-            Context.Entry(entity).State = EntityState.Modified;
+            DbSet.Update(entity);
             await Context.SaveChangesAsync();
             return entity;
         }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Hera.Data.Entities;
-using Hera.Services.ViewModels.Authentication;
-using Hera.Services.ViewModels.Order;
+using Hera.Common.ViewModels.Authentication;
+using Hera.Common.ViewModels.Order;
 using System;
 using System.Collections.Generic;
 using System.Text;

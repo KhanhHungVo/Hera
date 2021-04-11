@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Hera.Services.ViewModels.Authentication
+namespace Hera.Common.ViewModels.Authentication
 {
     public class ValidatedRegisterResult
     {

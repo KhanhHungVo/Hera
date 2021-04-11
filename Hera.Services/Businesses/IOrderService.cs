@@ -1,6 +1,6 @@
 ﻿using Hera.Common.Core;
 using Hera.Data.Entities;
-using Hera.Services.ViewModels.Order;
+using Hera.Common.ViewModels.Order;
 using System;
 using System.Collections.Generic;
 using System.Text;

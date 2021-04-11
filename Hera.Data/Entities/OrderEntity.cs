@@ -9,18 +9,19 @@ namespace Hera.Data.Entities
 {
     public class OrderEntity : EntityBaseTypeId<int>
     {
+        public string UserId { get; set; }
         public DateTime OrderDate { get; set; }
         public string Name { get; set; }
         public string Symbol { get; set; }
         public int Volume { get; set; }
         public string Reason { get; set; }
-        public double InvesmentValue { get; set; }
-        public double Cost { get; set; }
+        public double InvestmentValue { get; set; }
+        public double OrderPrice { get; set; }
         public double CurrentPrice { get; set; }
         public double MarketValue { get; set; }
         public double GainLossPercentage { get; set; }
         public double GainLoss { get; set; }
-        public Boolean Status { get; set; }
+        public Boolean Done { get; set; }
 
     }
 

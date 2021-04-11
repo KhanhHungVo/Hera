@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace Hera.Services.ViewModels.Topics
+namespace Hera.Common.ViewModels.Topics
 {
     public class TopicViewModel
     {

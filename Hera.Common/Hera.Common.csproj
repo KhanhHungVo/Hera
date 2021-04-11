@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="Core\Internal\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 
 </Project>

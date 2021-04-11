@@ -1,7 +1,7 @@
 ﻿using Hera.Common.Core;
 using Hera.Data.Entities;
 using Hera.Data.Infrastructure;
-using Hera.Services.ViewModels.Topics;
+using Hera.Common.ViewModels.Topics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;

@@ -1,7 +1,7 @@
 ﻿using Hera.Common.Core;
 using Hera.Common.WebAPI;
 using Hera.Services.Businesses;
-using Hera.Services.ViewModels.Topics;
+using Hera.Common.ViewModels.Topics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,6 @@
 ﻿using Hera.Data.Entities;
 using Hera.Data.Infrastructure;
-using Hera.Services.ViewModels.TopicCategories;
+using Hera.Common.ViewModels.TopicCategories;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;

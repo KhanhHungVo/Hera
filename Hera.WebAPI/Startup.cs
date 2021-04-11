@@ -9,6 +9,8 @@ using Hera.Data.Repositories;
 using Hera.Services;
 using Hera.Services.AutoMapperMapping;
 using Hera.Services.Businesses;
+using Hera.Services.Helper;
+using Hera.WebAPI.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -41,9 +43,16 @@ namespace Hera.WebAPI
             {
                 mc.AddProfile(new MappingProfile());
             });
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(ValidationActionFilter));
+            });
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(
+                options => options.SerializerSettings.Converters.Add(new EmptyStringJsonConverter())
+             );
+
             services.AddHeraSecurityAsSingleton();
             services.AddHeraAuthentication(Configuration);
             services.AddHeraSwagger(_env);
@@ -73,10 +82,9 @@ namespace Hera.WebAPI
             services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITopicsRepository, TopicsRepository>();
-            services.AddScoped<IOrderRepository, OrderRepository>();
-
-
+            services.AddScoped<IOrderRepository, OrderRepository>();            
             services.AddCors();
+             
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

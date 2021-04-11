@@ -60,6 +60,12 @@ namespace Hera.Common.WebAPI
         }
 
         [NonAction]
+        public IActionResult HeraNotFound(string message = null)
+        {
+            return NotFound(message);
+        }
+
+        [NonAction]
         public IActionResult HeraBadRequest(string message = null)
         {
             string messages = string.Join("; ", ModelState.Values

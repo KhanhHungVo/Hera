@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Hera.Services.ViewModels.TopicCategories
+namespace Hera.Common.ViewModels.TopicCategories
 {
     public class TopicCategoryViewModel
     {

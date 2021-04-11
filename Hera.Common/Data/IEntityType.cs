@@ -6,6 +6,6 @@ namespace Hera.Common.Data
 {
     public interface IEntityTypeId<TId>
     {
-        TId Id { get; }
+        public TId Id { get; }
     }
 }

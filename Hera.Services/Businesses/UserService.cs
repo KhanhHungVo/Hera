@@ -3,7 +3,7 @@ using AutoMapper;
 using Hera.Common.Utils;
 using Hera.Data.Entities;
 using Hera.Data.Infrastructure;
-using Hera.Services.ViewModels.Authentication;
+using Hera.Common.ViewModels.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System;

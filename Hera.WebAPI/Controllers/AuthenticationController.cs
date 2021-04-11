@@ -3,7 +3,7 @@ using Hera.Common.Core;
 using Hera.Common.WebAPI;
 using Hera.Services.Businesses;
 using Hera.Services.Models;
-using Hera.Services.ViewModels.Authentication;
+using Hera.Common.ViewModels.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -109,10 +109,10 @@ namespace Hera.WebAPI.Controllers
             string hashedPassword = _heraSecurity.EncryptAes(model.Password);
 
             var tokenResult = await _authenticationService.SignIn(model.Username, hashedPassword);
-            //if (tokenResult is null)
-            //{
-            //    return HeraBadRequest();
-            //}
+            if (tokenResult is null)
+            {
+                return HeraNotFound("Username or password is not correct");
+            }
 
             return HeraOk(tokenResult);
         }

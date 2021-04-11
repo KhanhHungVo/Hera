@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Text.Json.Serialization;
 
-namespace Hera.Services.ViewModels.Authentication
+namespace Hera.Common.ViewModels.Authentication
 {
-    public class JwtTokenViewModel
+    public class UserLoginViewModel
     {
         [Required(AllowEmptyStrings=false)]
-        public string AccessToken { get; set; }
+        public string Username { get; set; }
         [Required(AllowEmptyStrings = false)]
-        public string RefreshToken { get; set; }
+        public string Password { get; set; }
     }
 }

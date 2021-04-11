@@ -1,6 +1,6 @@
 ﻿using Hera.Common.WebAPI;
 using Hera.Services.Businesses;
-using Hera.Services.ViewModels.Order;
+using Hera.Common.ViewModels.Order;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Hera.WebAPI.Controllers
 {
     [Route("api/orders")]
-    [Authorize]
+    //[Authorize]
     public class OrderController : HeraBaseController
     {
         private readonly IOrderService _orderService;
@@ -21,13 +21,13 @@ namespace Hera.WebAPI.Controllers
             _orderService = orderService;
         }
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]OrderViewModel model)
+        public async Task<IActionResult> Create([FromBody] OrderViewModel model)
         {
             return HeraOk(await _orderService.CreateAsync(model));
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] OrderViewModel model)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] OrderViewModel model)
         {
             return HeraOk(await _orderService.UpdateAsync(model));
         }
@@ -44,7 +44,7 @@ namespace Hera.WebAPI.Controllers
             return HeraOk(await _orderService.GetAsync());
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             return HeraOk(await _orderService.DeleteAsync(id));

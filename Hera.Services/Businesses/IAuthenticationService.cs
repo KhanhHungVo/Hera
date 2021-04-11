@@ -1,6 +1,6 @@
 ﻿using Hera.Common.Core;
 using Hera.Data.Entities;
-using Hera.Services.ViewModels.Authentication;
+using Hera.Common.ViewModels.Authentication;
 using System.Threading.Tasks;
 
 namespace Hera.Services.Businesses
