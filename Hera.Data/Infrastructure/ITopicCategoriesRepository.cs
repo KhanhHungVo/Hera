@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Hera.Data.Infrastructure
 {
-    public interface ITopicCategoriesRepository : IRepositoryBase<TopicCategoryEntity>
+    public interface ITopicCategoriesRepository : IRepositoryBaseTypeId<TopicCategoryEntity>
     {
     }
 }

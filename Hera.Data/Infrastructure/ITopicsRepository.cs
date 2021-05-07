@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Hera.Data.Infrastructure
 {
-    public interface ITopicsRepository : IRepositoryBase<TopicEntity>
+    public interface ITopicsRepository : IRepositoryBaseTypeId<TopicEntity>
     {
         Task CreateTopic(TopicEntity topicEntity);
         Task<TopicEntity> UpdateTopic(TopicEntity topicEntity);
