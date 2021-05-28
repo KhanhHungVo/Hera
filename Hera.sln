@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hera.Data", "Hera.Data\Hera
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hera.Services", "Hera.Services\Hera.Services.csproj", "{B10C60BD-8684-4196-B565-A61529EAA6D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hera.CryptoService", "Hera.CryptoService\Hera.CryptoService.csproj", "{F8BD809A-D0F7-4484-9416-25ABDB7B59B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hera.CryptoService", "Hera.CryptoService\Hera.CryptoService.csproj", "{F8BD809A-D0F7-4484-9416-25ABDB7B59B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoCrawler", "CryptoCrawler\CryptoCrawler.csproj", "{42C18658-C593-4BDA-8918-AF81456E2F5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{F8BD809A-D0F7-4484-9416-25ABDB7B59B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8BD809A-D0F7-4484-9416-25ABDB7B59B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8BD809A-D0F7-4484-9416-25ABDB7B59B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42C18658-C593-4BDA-8918-AF81456E2F5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42C18658-C593-4BDA-8918-AF81456E2F5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42C18658-C593-4BDA-8918-AF81456E2F5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42C18658-C593-4BDA-8918-AF81456E2F5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

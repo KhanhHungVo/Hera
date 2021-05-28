@@ -24,7 +24,7 @@ namespace Hera.CryptoService.Services.CoinMarketCapServices
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
-        public override async Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int start, int limit, string sortColumn, string sortOrder = "")
+        public override async Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int start, int limit, string sortColumn = "MarketCap", string sortOrder = "")
         {
             var rs = new List<CoinBasicInfo>();
             var rqParams = new ListingLatestRq()

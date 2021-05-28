@@ -35,7 +35,7 @@ namespace Hera.CryptoService
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
-        public virtual async Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int start, int limit, string sortColumn, string sortOrder = "")
+        public virtual async Task<List<CoinBasicInfo>> GetListCoinBasicInfo(int start, int limit, string sortColumn = "MarketCap", string sortOrder = "")
         {
             var rs = new List<CoinBasicInfo>();
             var rqParams = new ListingLatestRq()

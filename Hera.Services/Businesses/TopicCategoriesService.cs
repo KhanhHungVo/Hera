@@ -10,7 +10,7 @@ namespace Hera.Services.Businesses
 {
     public class TopicCategoriesService : ServiceBase<TopicCategoryEntity>, ITopicCategoriesService
     {
-        public TopicCategoriesService(IRepositoryBase<TopicCategoryEntity> repository) : base(repository)
+        public TopicCategoriesService(IRepositoryBaseTypeId<TopicCategoryEntity> repository) : base(repository)
         {
 
         }
