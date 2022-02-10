@@ -1,14 +1,10 @@
 using AutoMapper;
 using Hera.Common.Core;
-using Hera.Common.Data;
 using Hera.Common.Extensions;
 using Hera.CryptoService;
-using Hera.CryptoService.Services.CoinMarketCapServices;
 using Hera.Data.Infrastructure;
-using Hera.Data.Repositories;
 using Hera.Services;
 using Hera.Services.AutoMapperMapping;
-using Hera.Services.Businesses;
 using Hera.Services.Helper;
 using Hera.WebAPI.Utils;
 using Microsoft.AspNetCore.Builder;
@@ -18,8 +14,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
 
 namespace Hera.WebAPI
 {
@@ -56,7 +50,7 @@ namespace Hera.WebAPI
             services.AddHeraSecurityAsSingleton();
             services.AddHeraAuthentication(Configuration);
             services.AddHeraSwagger(_env);
-            services.AddEntityFrameworkNpgsql().AddDbContext<HeraDbContext>(opt =>
+            services.AddDbContext<HeraDbContext>(opt =>
             {
                 opt.UseNpgsql(Configuration.GetConnectionString(HeraConstants.CONNECTION_STRINGS__POSTGRES_SQL_CONNECTION));
 

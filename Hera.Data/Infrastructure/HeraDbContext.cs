@@ -22,7 +22,6 @@ namespace Hera.Data.Infrastructure
             InitializePostgresUuidV4();
         }
         public DbSet<UserEntity> Users { get; set; }
-        public DbSet<TopicEntity> Topics { get; set; }
         public DbSet<OrderEntity> Orders { get; set; }
         public DbSet<CoinBasicInfoEntity> CoinBasicInfos { get; set; }
 

@@ -41,7 +41,6 @@ namespace Hera.Data.Entities
 
         public ICollection<UserTokenEntity> UserTokens { get; set; }
 
-        public ICollection<TopicsUserInterestEntity> TopicsUserInterest { get; set; }
     }
 
     public class UserEntityBuilder : HeraBaseCustomModelBinder<UserEntity, string>, IHeraCustomModelBinder

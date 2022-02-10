@@ -14,15 +14,12 @@ namespace Hera.Services
             services.AddScoped(typeof(IServiceBaseTypeId<,>), typeof(ServiceBaseTypeId<,>));
             services.AddScoped(typeof(IServiceBase<>), typeof(ServiceBase<>));
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<ITopicCategoriesService, TopicCategoriesService>();
-            services.AddScoped<ITopicsService, TopicsService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();
 
             services.AddTransient(typeof(IRepositoryBaseTypeId<,>), typeof(RepositoryBaseTypeId<,>));
             services.AddTransient(typeof(IRepositoryBaseTypeId<>), typeof(RepositoryBase<>));
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<ITopicsRepository, TopicsRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             return services;
         }   

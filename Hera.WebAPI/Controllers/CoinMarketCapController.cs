@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Hera.Common.WebAPI;
 using Hera.CryptoService;
-using Hera.CryptoService.Services.CoinMarketCapServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,14 +25,15 @@ namespace Hera.WebAPI.Controllers
         }
 
         [Route("list-coins")]
-        public async Task<IActionResult> GetListCoins([FromServices] ListingLatestCMCService listingLatestCMCService, int start = 1, int limit = 50, string sortColumn= "MarketCap", string sortOrder="")
+        [HttpGet]
+        public async Task<IActionResult> GetListCoins(int start = 1, int limit = 50, string sortColumn= "MarketCap", string sortOrder="")
         {
             var result = await _coinMarketCapService.GetListCoinBasicInfo(start, limit, sortColumn, sortOrder);
-            //var result = await listingLatestCMCService.GetListCoinBasicInfo(start, limit, sortColumn, sortOrder);
             return HeraOk(result);
         }
 
         [Route("coin")]
+        [HttpGet]
         public async Task<IActionResult> GetCoinBasicInfo(string symbol)
         {
             var result = await _coinMarketCapService.GetCoinBasicInfo(symbol);

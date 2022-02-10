@@ -55,6 +55,7 @@ namespace Hera.CryptoService
             rs = SortHelper<CoinBasicInfo>.SortBy(rs, sortColumn, sortOrder).ToList();
             return rs;
         }
+
         public async Task<CoinBasicInfo> GetCoinBasicInfo(string symbol)
         {
             var rs = new CoinBasicInfo();
@@ -70,21 +71,31 @@ namespace Hera.CryptoService
 
         public async Task<Response<List<ListingLatestDataRs>>> makeAPICall()
         {
-            var URL = new UriBuilder($"{BASE_URL}/v1/cryptocurrency/listings/latest");
+            //var URL = new UriBuilder($"{BASE_URL}/v1/cryptocurrency/listings/latest");
 
-            var queryString = HttpUtility.ParseQueryString(string.Empty);
-            queryString["start"] = "1";
-            queryString["limit"] = "50";
-            queryString["convert"] = "USD";
+            //var queryString = HttpUtility.ParseQueryString(string.Empty);
+            //queryString["start"] = "1";
+            //queryString["limit"] = "50";
+            //queryString["convert"] = "USD";
 
-            URL.Query = queryString.ToString();
+            //URL.Query = queryString.ToString();
 
-            var client = new WebClient();
-            client.Headers.Add("X-CMC_PRO_API_KEY", API_KEY);
-            client.Headers.Add("Accepts", "application/json");
-            var content = await client.DownloadStringTaskAsync(URL.ToString());
-            var result = JsonConvert.DeserializeObject<Response<List<ListingLatestDataRs>>>(content);
-            return result; 
+            //var client = new WebClient();
+            //client.Headers.Add("X-CMC_PRO_API_KEY", API_KEY);
+            //client.Headers.Add("Accepts", "application/json");
+            //var content = await client.DownloadStringTaskAsync(URL.ToString());
+            //var result = JsonConvert.DeserializeObject<Response<List<ListingLatestDataRs>>>(content);
+            //return result;
+
+            var rs = new List<CoinBasicInfo>();
+            var rqParams = new ListingLatestRq()
+            {
+                Start = 1,
+                Limit = 50,
+                Convert = "USD"
+            };
+            var listCoins = await SendApiRequest<List<ListingLatestDataRs>>(rqParams, "cryptocurrency/listings/latest");
+            return listCoins;
         }
         public async Task<Response<T>> SendApiRequest<T>(object requestParams, string endpoint)
         {
