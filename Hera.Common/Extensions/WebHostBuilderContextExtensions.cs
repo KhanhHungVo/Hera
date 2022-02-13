@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using Serilog.Core;
 using Serilog.Formatting.Compact;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Hera.Common.Extensions
 {
