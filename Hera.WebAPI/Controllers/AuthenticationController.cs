@@ -1,19 +1,12 @@
-﻿using Google.Apis.Auth;
-using Hera.Common.Core;
+﻿using Hera.Common.Core;
 using Hera.Common.WebAPI;
 using Hera.Services.Businesses;
-using Hera.Services.Models;
 using Hera.Common.ViewModels.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hera.WebAPI.Controllers

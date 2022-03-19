@@ -5,11 +5,9 @@ using Hera.Common.ViewModels.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 using Serilog;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 

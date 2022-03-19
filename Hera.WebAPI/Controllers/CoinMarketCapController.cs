@@ -3,6 +3,7 @@ using Hera.Common.WebAPI;
 using Hera.CryptoService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Hera.WebAPI.Controllers
 {
@@ -10,17 +11,20 @@ namespace Hera.WebAPI.Controllers
     public class CoinMarketCapController : HeraBaseController
     {
         private readonly ICoinMarketCapService _coinMarketCapService;
+        private readonly ILogger logger;
 
-        public CoinMarketCapController(IHttpContextAccessor httpContextAccessor, ICoinMarketCapService cryptoService
+        public CoinMarketCapController(IHttpContextAccessor httpContextAccessor, ICoinMarketCapService cryptoService, ILogger<CoinMarketCapController> logger
             ) : base(httpContextAccessor)
         {
             _coinMarketCapService = cryptoService;
+            this.logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             var result = await _coinMarketCapService.makeAPICall();
+            logger.LogInformation("test");
             return HeraOk(result);
         }
 
@@ -39,6 +43,6 @@ namespace Hera.WebAPI.Controllers
             var result = await _coinMarketCapService.GetCoinBasicInfo(symbol);
             return HeraOk(result);
         }
-
+        
     }
 }

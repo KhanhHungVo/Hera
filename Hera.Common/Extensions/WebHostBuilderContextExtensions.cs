@@ -9,16 +9,18 @@ namespace Hera.Common.Extensions
     {
         public static IWebHostBuilder UseHeraSerilog(this IWebHostBuilder webBuilder)
         {
-            var loggerConfiguration = new LoggerConfiguration()
+
+            Log.Logger = new LoggerConfiguration()
                                     .Enrich.WithProperty("Version", "1.0.0")
                                     .Enrich.WithThreadId()
-                                    .WriteTo.File(new CompactJsonFormatter(), @"Logs\log.txt", Serilog.Events.LogEventLevel.Debug, rollingInterval: RollingInterval.Day);
-
-            Log.Logger = loggerConfiguration.CreateLogger();
+                                    .WriteTo.File(new CompactJsonFormatter(), @"Logs\log.txt", Serilog.Events.LogEventLevel.Debug, rollingInterval: RollingInterval.Day)
+                                    .CreateLogger();
             webBuilder.ConfigureServices((context, services) =>
             {
                 services.AddSingleton(Log.Logger);
             });
+            
+            
             return webBuilder;
         }
     }

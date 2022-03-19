@@ -20,6 +20,7 @@ namespace Hera.WebAPI
                     webBuilder.UseIISIntegration()
                               .UseStartup<Startup>()
                               .UseHeraSerilog();
+                    
                 });
     }
 }

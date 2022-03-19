@@ -1,12 +1,8 @@
 ﻿using Hera.Common.WebAPI;
 using Hera.Services.Businesses;
 using Hera.Common.ViewModels.Order;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Hera.WebAPI.Controllers
