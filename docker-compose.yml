@@ -8,5 +8,20 @@ services:
     build:
       context: .
       dockerfile: Hera.WebAPI/Dockerfile
+    environment:
+      - ConnectionStrings__PostgresSqlConnection="Server=localhost;Port=5432;User ID=postgres;Password=123456;Database=Hera;Integrated Security=true;Pooling=true;"
+    volumes:
+      - ~\.aspnet\https:C:\https:ro
     ports:
-      - 5000:5000
+      - "5000:5000"
+    depends_on:
+      - "postgresdb"
+  postgresdb:
+    image: postgres
+    ports:
+      - "5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "123456"
+      POSTGRES_DB: "Hera"
+
